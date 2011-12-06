@@ -26,9 +26,9 @@ export GIT_PS1_SHOWUPSTREAM="auto"
 # Check if our terminal/console can play with colors and set the proper prompt 
 case $TERM in
     xterm*)
-        PS1="\n$LIGHT_BLACK($WHITE\u$LIGHT_GREEN@$WHITE\h$LIGHT_BLACK)-($WHITE\j$LIGHT_BLACK)-($WHITE$(date +%H:%M)$LIGHT_BLACK)$MAGENTA$(__git_ps1 ' (%s)' )\n$LIGHT_BLACK($GREEN\w$LIGHT_BLACK)-($GREEN$(ls -1 | wc -l | sed 's: ::g') files, $(ls -lah | grep -m 1 total | sed 's/total //')b$LIGHT_BLACK) $WHITE\$$DEFAULT"
+        PS1="\n$LIGHT_BLACK($WHITE\u$LIGHT_GREEN@$WHITE\h$LIGHT_BLACK)-($WHITE\j$LIGHT_BLACK)-($WHITE$(date '+%d %h %H:%M')$LIGHT_BLACK)$MAGENTA$(__git_ps1 ' (%s)' )\n$LIGHT_BLACK($GREEN\w$LIGHT_BLACK)-($GREEN$(ls -1 | wc -l | sed 's: ::g') files, $(ls -lah | grep -m 1 total | sed 's/total //')b$LIGHT_BLACK) $WHITE\$$DEFAULT"
         ;;
     *)
-        PS1="\n(\u@\h)-(\j)-($(date +%H:%M)) $(__git_ps1 '(%s)')\n(\w)-($(ls -1 | wc -l | sed 's: ::g') files, $(ls -lah | grep -m 1 total | sed 's/total //')b) \$"
+        PS1="\n(\u@\h)-(\j)-($(date '+%d %h %H:%M')) $(__git_ps1 '(%s)')\n(\w)-($(ls -1 | wc -l | sed 's: ::g') files, $(ls -lah | grep -m 1 total | sed 's/total //')b) \$"
         ;;
 esac
