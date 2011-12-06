@@ -1,0 +1,33 @@
+[user]
+    email = office@josemi-liebana.com
+	name = Josemi Liébana
+[color]
+	status = auto
+	branch = auto
+	diff = auto
+	ui = true
+[branch]
+	autosetupmerge = true
+[core]
+    #editor = mate -w
+    editor = mvim -f
+	excludesfile = ~/.gitignore
+[merge]
+	tool = kdiff3
+[mergetool "kdiff3"]
+	path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
+[diff]
+	tool = kdiff3
+[difftool "kdiff3"]
+	path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
+[cola]
+	fontdiff = Monaco,14,-1,5,50,0,0,0,0,0
+	tabwidth = 4
+[gui]
+	editor = mate
+[commit]
+	template = ~/.gitcommit.tpl
+[achievement]
+	upload = true
+[format]
+	signoff = true
