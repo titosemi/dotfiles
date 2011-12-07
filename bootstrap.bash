@@ -42,7 +42,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     # Copy the files
     for file in $(ls -la |grep ^- | awk '{print ($9)}'); do
         # Don't copy this script...
-        if [ "$file" != "$SCRIPT" ]; then    
+        if [ "$file" != "$SCRIPT" -a "$file" != "README.md" ]; then    
             MSG="Attempting to copy $file ...";
             OUTPUT=$(cp "$file" ${HOME}/"$file" 2>&1)
             output
