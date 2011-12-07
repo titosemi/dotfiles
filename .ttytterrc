@@ -1,0 +1,43 @@
+# Check for updates at startup
+vcheck=1 
+
+# Colors, etc are good!
+ansi=1
+
+# Prompt me before a tweet posts
+verify=1
+
+# Check for mentions and replies and show them in Timeline. Even from peope I don't follow
+mentions=1
+
+# Create a new line with \r \n
+newline=1
+
+# Delay for post the Tweet's
+slowpost=5
+
+# Use readline support. Change 1 to a list of followers in quotes for tab completion support
+readline=1
+
+# Set types of notifications to receive notifications
+#notifies=dm,me,reply,search,default
+notifies=default,dm,me,reply
+
+# What to do with URL's. We just open with the default browser :)
+urlopen=open %U
+
+# Download avatars with curl, and open it with Preview
+avatar=curl -s %U > /tmp/ttytter-%N.%E ; open -a /Applications/Preview.app /tmp/ttytter-%N.%E 
+
+# Always show the timestamp with this format
+timestamp=%e %b %k:%M:%S
+
+# Activate Geolocalization
+location=1
+
+# Latitude for geolocalization
+lat=48.15177
+
+# Longitud for geolocalization
+long=11.55371
+
