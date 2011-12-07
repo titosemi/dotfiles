@@ -72,7 +72,7 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
     alias hax="growlnotify -a 'Activity Monitor' 'System error' -m 'WTF R U DOIN'"
 
     # Some applications
-    alias twitter='/usr/local/bin/ttytter -timestamp="%k:%M:%S" -exts="/usr/local/ttytter/extensions/enhanced_growl/enhanced_growl.pl" -notifytype="enhanced_growl"'
+    alias twitter='/usr/local/bin/ttytter -exts="/usr/local/ttytter/extensions/enhanced_growl/enhanced_growl.pl" -notifytype="enhanced_growl"'
     alias drush='/Applications/drush/drush'
 
 fi    
