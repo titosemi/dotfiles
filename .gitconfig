@@ -17,14 +17,19 @@
 [mergetool "kdiff3"]
 	path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
 [diff]
-	tool = kdiff3
+	tool = Kaleidoscope
 [difftool "kdiff3"]
-	path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
+    path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
+[difftool "Kaleidoscope"]
+    cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\" 
+[difftool]
+	prompt = false
 [cola]
 	fontdiff = Monaco,14,-1,5,50,0,0,0,0,0
 	tabwidth = 4
 [gui]
-	editor = mate
+    #editor = mate
+    editor = mvim
 [commit]
 	template = ~/.gitcommit.tpl
 [achievement]
