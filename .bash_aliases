@@ -33,8 +33,10 @@ alias fs="stat -f \"%z bytes\""
 if [[ "$OSTYPE" =~ ^darwin ]]; then
 
     # Shortcuts
-    alias d="cd ~/Documents/Dropbox"
-    alias p="cd ~/Projects"
+    alias cdd="cd ~/Dropbox"
+    alias cds="cd ~/Sites"
+    alias cdg="cd ~/Sites/github"
+    alias cdp="cd ~/Sites/projects"
     alias g="git"
     alias v="vim"
     alias m="mate ."   
