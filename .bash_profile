@@ -4,9 +4,11 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
     GITFLOW_COMPLETION="/usr/local/git-flow-completion/git-flow-completion.bash";
 else
     GIT_COMPLETION="/etc/bash_completion.d/git";
+    GITFLOW_COMPLETION="/opt/git-flow-completion/git-flow-completion.bash";
 fi
 
-source "${GIT_COMPLETION}"; 
+source "${GIT_COMPLETION}";
+source "${GITFLOW_COMPLETION}";
 
 # Load all the .bash_* files excluding this file
 for file in $(ls -a ${HOME}/ |grep .bash_ |grep -v .bash_profile |grep -v .bash_history); do
