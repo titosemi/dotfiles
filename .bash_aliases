@@ -29,16 +29,14 @@ alias whois="whois -h whois-servers.net"
 # File size
 alias fs="stat -f \"%z bytes\""
 
+# Apps
+alias g="git"
+alias v="vim" 
+
 # Aliases just for MAC
 if [[ "$OSTYPE" =~ ^darwin ]]; then
-
-    # Shortcuts
-    alias cdd="cd ~/Dropbox"
-    alias cds="cd ~/Sites"
-    alias cdg="cd ~/Sites/github"
-    alias cdp="cd ~/Sites/projects"
-    alias g="git"
-    alias v="vim"
+    
+    # Apps
     alias m="mate ."   
 
     # Flush Directory Service cache
@@ -76,6 +74,19 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
     # Some applications
     alias twitter='/usr/local/bin/ttytter -exts="/usr/local/ttytter/extensions/enhanced_growl/enhanced_growl.pl" -notifytype="enhanced_growl"'
     alias drush='/Applications/drush/drush'
+
+    # Shortcuts
+    alias cdd="cd ~/Dropbox"
+    alias cds="cd ~/Sites"
+    alias cdg="cd ~/Sites/github"
+    alias cdp="cd ~/Sites/projects"
+
+else
+
+    # Shortcuts
+    alias cds="cd /srv/www"
+    alias cdg="cd /srv/www/github"
+    alias cdp="cd /srv/www/projects"
 
 fi    
    
