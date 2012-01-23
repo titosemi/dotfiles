@@ -30,3 +30,9 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
     export MANPATH=/opt/local/man:${MANPATH}
 
 fi
+
+# Load git-achievements if exists
+if [ -e /usr/local/bin/git-achievements ]; then
+    export PATH=/usr/local/bin/git-achievements:$PATH
+fi
+

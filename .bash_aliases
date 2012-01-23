@@ -30,8 +30,12 @@ alias whois="whois -h whois-servers.net"
 alias fs="stat -f \"%z bytes\""
 
 # Apps
+alias v="vim"
 alias g="git"
-alias v="vim" 
+
+if [ -e "/usr/local/bin/git-achievements" ]; then 
+    alias git="git-achievements" 
+fi
 
 # Aliases just for MAC
 if [[ "$OSTYPE" =~ ^darwin ]]; then
