@@ -1,9 +1,30 @@
+# Apple specifics file
+# --------------------
 .DS_Store
+._*
+.AppleDouble/
+.AppleDesktop/
+.AppleDB/
+Network Trash Folder
+Temporary Items
+.fuse_hidden*
+
+# Windows files
+# --------------------
 Thumbs.db
 Desktop.ini
+
+# IDES & Editors
+# --------------------
+nbproject/
+.settings/
+.buildpath
+.project
+.idea/
+
+# Others
+# --------------------
 *~
 *.swp
 *.svn
 logs/*.*
-nbproject/
-
