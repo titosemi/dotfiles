@@ -1,35 +1,49 @@
 [user]
     email = office@josemi-liebana.com
-	name = Josemi Liébana
+	name = Josemi Liébana
+[core]
+    editor = mvim -f
+    #editor = mate -w
+    #editor = subl -w
+    excludesfile = ~/.gitignore
+    filemode = false
+    repositoryformatversion = 0  
 [color]
 	status = auto
 	branch = auto
 	diff = auto
 	ui = true
+[push]
+    default = current 
 [branch]
 	autosetupmerge = true
-[core]
-    #editor = mate -w
-    editor = mvim -f
-	excludesfile = ~/.gitignore
-[merge]
-	tool = kdiff3
-[mergetool "kdiff3"]
-	path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
 [diff]
 	tool = Kaleidoscope
+[difftool]
+	prompt = false
 [difftool "kdiff3"]
     path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
 [difftool "Kaleidoscope"]
     cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\" 
-[difftool]
-	prompt = false
+[difftool "sourcetree"]
+    cmd = /Applications/Kaleidoscope.app/Contents/MacOS/ksdiff -w \"$LOCAL\" \"$REMOTE\"
+    path = 
+[merge]
+    tool = kdiff3
+    keepBackup = false
+[mergetool "kdiff3"]
+    #path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
+    cmd =  /Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+[mergetool "sourcetree"]
+    cmd = /Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+    trustExitCode = true
 [cola]
 	fontdiff = Monaco,14,-1,5,50,0,0,0,0,0
 	tabwidth = 4
 [gui]
+    #editor = mvim
     #editor = mate
-    editor = mvim
+    #editor = subl
 [commit]
 	template = ~/.gitcommit.tpl
 [achievement]
