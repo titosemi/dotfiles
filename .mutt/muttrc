@@ -1,0 +1,90 @@
+# ------------------------------------
+# Password and Users variables
+# ------------------------------------
+
+# Decrypt the passwords and save them into variables
+set my_tmpsecret=`gpg -o ~/.mutt/.tmp -d ~/.mutt/passwords.gpg`
+set my_westwing_password=`awk '/Westwing:/ {print $2}' ~/.mutt/.tmp`
+set my_google_password=`awk '/Gmail:/ {print $2}' ~/.mutt/.tmp`
+set my_office_password=`awk '/Office:/ {print $2}' ~/.mutt/.tmp`
+set my_del=`rm -f ~/.mutt/.tmp`
+
+# Get the the users from the config files
+set my_westwing_user=`grep "imap_user" ~/.mutt/accounts/josemi.liebana@westwing.de/config | cut -d'"' -f 2` 
+set my_google_user=`grep "imap_user" ~/.mutt/accounts/josemi.liebana@gmail.com/config | cut -d'"' -f 2`
+set my_office_user=`grep "imap_user" ~/.mutt/accounts/office@josemi-liebana.com/config | cut -d'"' -f 2`
+
+# Get the folders from the config files
+set my_westwing_folder=`grep "folder" ~/.mutt/accounts/josemi.liebana@westwing.de/config | cut -d'"' -f 2` 
+set my_google_folder=`grep "folder" ~/.mutt/accounts/josemi.liebana@gmail.com/config | cut -d'"' -f 2`
+set my_office_folder=`grep "folder" ~/.mutt/accounts/office@josemi-liebana.com/config | cut -d'"' -f 2`
+
+# ------------------------------------
+# Account Hooks
+# ------------------------------------
+account-hook . 'unset imap_user imap_pass smtp_pass' # unset first!
+account-hook westwing.de 'set imap_user=$my_westwing_user imap_pass=$my_westwing_password smtp_pass=$my_westwing_password'
+account-hook imaps://josemi.liebana@imap.gmail.com/ 'set imap_user=$my_google_user imap_pass=$my_google_password smtp_pass=$my_google_password'
+account-hook imaps://office@josemi-liebana.com@imap.gmail.com/ 'set imap_user=$my_office_user imap_pass=$my_office_password smtp_pass=$my_office_password'
+
+#
+# ------------------------------------
+# Folder Hooks
+# ------------------------------------
+folder-hook westwing.de 'source ~/.mutt/accounts/josemi.liebana@westwing.de/config'
+folder-hook imaps://josemi.liebana@imap.gmail.com/ 'source ~/.mutt/accounts/josemi.liebana@gmail.com/config'
+#folder-hook imaps://office@josemi-liebana.com@imap.gmail.com/ 'set folder=$my_office_folder source ~/.mutt/accounts/office@josemi-liebana.com/config'
+folder-hook imaps://office@josemi-liebana.com@imap.gmail.com/ 'source ~/.mutt/accounts/office@josemi-liebana.com/config'
+# switch to default account on startup
+source ~/.mutt/accounts/josemi.liebana@westwing.de/config
+#source ~/.mutt/accounts/office@josemi-liebana.com/config
+#source ~/.mutt/accounts/josemi.liebana@gmail.com/config
+
+#
+# ------------------------------------
+# Macros to make life easier
+# ------------------------------------
+macro index,pager <esc>1 '<sync-mailbox><enter-command>source ~/.mutt/accounts/josemi.liebana@westwing.de/config<enter><change-folder>!<enter>'
+macro index,pager <esc>2 '<sync-mailbox><enter-command>source ~/.mutt/accounts/josemi.liebana@gmail.com/config<enter><change-folder>!<enter>' 
+macro index,pager <esc>3 '<sync-mailbox><enter-command>source ~/.mutt/accounts/office@josemi-liebana.com/config<enter><change-folder>!<enter>' 
+
+#
+# ------------------------------------
+# General Preferences
+# ------------------------------------
+set editor="/usr/bin/vim"
+set include="yes" # Always quote when replying
+set pager_stop="yes" # Don't jump to next message when at bottom of current message
+set move=no #
+
+#
+# ------------------------------------
+# Cache and folder settings
+# ------------------------------------
+set header_cache ="~/.mutt/cache/headers"
+set message_cachedir ="~/.mutt/cache/bodies"
+set certificate_file ="~/.mutt/certificates"
+
+#
+# ------------------------------------
+# View preferences
+# ------------------------------------
+source ~/.mutt/themes/mutt-colors-solarized-dark-256.muttrc
+set smart_wrap = yes
+set sort = 'reverse-threads' # Mail that belongs together should be displayed in a thread-tree and the first is the last one
+set sort_aux = 'last-date-received'
+#set pager_index_lines="5" # split the screen into halves, so we can watch index + pager simultaneously
+
+#-------------------------------------
+# Mail-check preferences
+#-------------------------------------
+set imap_check_subscribed  # Automatically poll subscribed mailboxes for new mail
+set imap_list_subscribed=yes # Look for all folders and not only for subscribed
+set timeout=60 # Set timeout to 1 minute
+set mail_check= 60 # Check fir mail every minute
+set ssl_verify_host = no
+set ssl_verify_dates = no
+ignore "Authentication-Results:"
+ignore "DomainKey-Signature:"
+ignore "DKIM-Signature:"
+# EOF

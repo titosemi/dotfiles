@@ -1,0 +1,9 @@
+# Office Config
+set from="Josemi Liébana <office@josemi-liebana.com>"
+#set hostname="office@josemi-liebana.com"
+set folder="imaps://office@josemi-liebana.com@imap.gmail.com/"
+set imap_user="office@josemi-liebana.com"
+set smtp_url = "smtp://office@josemi-liebana.com@smtp.gmail.com:587"
+set postponed="=Drafts"
+set spoolfile="imaps://office@josemi-liebana.com@imap.gmail.com/INBOX"
+set signature="~/.mutt/accounts/office@josemi-liebana.com/signature"

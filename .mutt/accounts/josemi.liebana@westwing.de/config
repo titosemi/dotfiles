@@ -1,0 +1,10 @@
+# Westwing configuration
+set from="Josemi Liébana <josemi.liebana@westwing.de>"
+set hostname="westwing.de"
+set folder="imap://imap.westwing.de/"
+set spoolfile="imap://imap.westwing.de/INBOX"
+set postponed="=Drafts"
+set record="INBOX.Sent"
+set imap_user="josemi.liebana@westwing.de"
+set smtp_url="smtp://josemi.liebana@westwing.de@smtp.westwing.de"
+set signature="~/.mutt/accounts/josemi.liebana@westwing.de/signature"

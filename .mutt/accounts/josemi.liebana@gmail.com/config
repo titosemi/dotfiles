@@ -1,0 +1,13 @@
+# Gmail Config
+set from="Josemi Liébana <josemi.liebana@gmail.com>"
+#set hostname="josemi.liebana@gmail.com"
+set folder="imaps://josemi.liebana@imap.gmail.com/"
+set imap_user="josemi.liebana"
+set smtp_url = "smtps://josemi.liebana@smtp.gmail.com"
+#set spoolfile="imaps://josemi.liebana@imap.gmail.com/INBOX"
+set spoolfile = "=INBOX"
+set postponed = "=Drafts"
+set record = "=Deleted Messages"
+set mbox = "=Archives"
+#set spam = "=Spam"
+set signature="~/.mutt/accounts/josemi.liebana@gmail.com/signature"
