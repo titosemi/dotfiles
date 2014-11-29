@@ -1,0 +1,22 @@
+set guifont=Inconsolata\ for\ Powerline:h15
+
+if has("gui_running")
+    set guifont=Inconsolata\ for\ Powerline:h15
+endif
+
+"" Keep NERDTree open
+""autocmd VimEnter * NERDTree
+" "autocmd BufEnter * NERDTreeMirror
+
+
+"" Required config for Powerline
+"" -----------------------------
+""set lastmodtstatus=2  "" Always show the status bar
+""set encoding=utf-8    "" Fix the font and lot of strange characters and colors
+""set t_Co=256          "" Set 256 colors mode
+""set fillchars+=stl:\ ,stlnc:\
+
+"" Load Powerline
+""python from powerline.vim import setup as powerline_setup
+""python powerline_setup()
+""python del powerline_setup
