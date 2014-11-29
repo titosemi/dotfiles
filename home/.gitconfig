@@ -1,0 +1,7 @@
+[user]
+	name = Josemi Liébana
+	email = josemi.liebana@westwing.de
+[push]
+	default = simple
+[branch]
+	autosetupmerge = always
