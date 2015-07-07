@@ -58,8 +58,8 @@ alias modifierResizeReverse  ctrl;alt;cmd
 alias modifierPush           ctrl;alt;cmd
 alias modifierNudge          shift;alt
 alias modifierFocus          shift;ctrl
-alias modifierThrow          ctrl;alt
-alias modifierLayout         ctrl;alt;cmd
+alias modifierThrow          ctrl;alt;cmd;shift
+alias modifierLayout         ctrl;alt;cmd;shift
 alias modifierHint           ctrl;alt;cmd
 alias modifierGrid           ctrl;alt;cmd
 
@@ -78,35 +78,71 @@ alias topRight    corner top-right resize:screenSizeX/2;screenSizeY/2
 alias bottomLeft  corner bottom-left resize:screenSizeX/2;screenSizeY/2
 alias bottomRight corner bottom-right resize:screenSizeX/2;screenSizeY/2
 
-
-# Monitors
-# --------
-alias monitorLeft    0
-alias monitorMiddle  1
-alias monitorRight   2
-
 # Applications
 # ------------
 alias browser	'Google Chrome'
 alias ide     	'PHPStorm'
 alias editor  	'MacVim'
-alias mail    	'Airmail'
+alias mail    	'Mail'
+alias outlook   'Microsoft Outlook'
 alias calendar  'Calendar'
 alias term	  	'iTerm'
-alias asana   	'Asana'
 
-# 1 Monitor Layout
-layout oneScreen ${term} 	  ${full} 	 	${monitorLeft}
-layout oneScreen ${mail}      ${full} 	 	${monitorLeft}
-layout oneScreen ${calendar}  ${full} 	 	${monitorLeft}
-layout oneScreen ${asana}     ${full}    	${monitorLeft}
+# Monitors
+# --------
+alias monitorOne   0
+alias monitorTwo   1
+alias monitorThree 2
+###########
+
+# Layouts #
+###########
+
+# 1 Monitor Layouts
+# ----------------
+layout oneScreen BEFORE hide all
+layout oneScreen ${term}     ${full}        ${monitorOne}
+layout oneScreen ${mail}     ${leftHalf}    ${monitorOne}
+layout oneScreen ${outlook}  ${leftHalf}    ${monitorOne}
+layout oneScreen ${calendar} ${bottomHalf}  ${monitorOne}
+layout oneScreen 'Telegram'  ${topRight}    ${monitorOne}
+layout oneScreen 'Skype'     ${topRight}    ${monitorOne}
+layout oneScreen 'Adium'     ${bottomRight} ${monitorOne}
+layout oneScreen 'HipChat'   ${bottomRight} ${monitorOne}
+layout oneScreen ${browser}  ${rightHalf}   ${monitorOne}
+layout oneScreen AFTER show ${term},${outlook},'Skype','HipChat',${browser}
 
 # 2 Monitors Layout
-layout twoScreens ${term}     ${full}    	${monitorMiddle}
-layout twoScreens ${mail}  	  ${topHalf} 	${monitorLeft}
-layout twoScreens ${calendar} ${bottomHalf} ${monitorLeft}
-layout twoScreens ${asana}    ${full}    	${monitorMiddle}
+# -----------------
+layout twoScreens BEFORE hide all
+layout twoScreens ${term}     ${full}        ${monitorOne}
+layout twoScreens ${mail}     ${leftHalf}    ${monitorTwo}
+layout twoScreens ${outlook}  ${leftHalf}    ${monitorTwo}
+layout twoScreens ${calendar} ${bottomHalf}  ${monitorTwo}
+layout twoScreens 'Telegram'  ${topRight}    ${monitorTwo}
+layout twoScreens 'Skype'     ${topRight}    ${monitorTwo}
+layout twoScreens 'Adium'     ${bottomRight} ${monitorTwo}
+layout twoScreens 'HipChat'   ${bottomRight} ${monitorTwo}
+layout twoScreens ${browser}  ${rightHalf}   ${monitorTwo}
+layout twoScreens AFTER show ${term},${outlook},'Skype','HipChat',${browser}
 
+# 3 Monitors Layout
+# -----------------
+layout threeScreens BEFORE hide all
+layout threeScreens ${term}     ${full}        ${monitorOne}
+layout threeScreens ${mail}     ${leftHalf}    ${monitorThree}
+layout threeScreens ${outlook}  ${leftHalf}    ${monitorThree}
+layout threeScreens ${calendar} ${bottomHalf}  ${monitorThree}
+layout threeScreens 'Telegram'  ${topRight}    ${monitorThree}
+layout threeScreens 'Skype'     ${topRight}    ${monitorThree}
+layout threeScreens 'Adium'     ${bottomRight} ${monitorThree}
+layout threeScreens 'HipChat'   ${bottomRight} ${monitorThree}
+layout threeScreens ${browser}  ${rightHalf}   ${monitorThree}
+layout threeScreens AFTER show ${term},${outlook},'Skype','HipChat',${browser}
+
+default oneScreen count:1
+default twoScreens count:2
+default threeScreens count:3
 
 ###############################
 # Bindings: alias name value  #
@@ -114,19 +150,18 @@ layout twoScreens ${asana}    ${full}    	${monitorMiddle}
 
 # Resize Bindings
 # ---------------
-#bind right:${modifierResize}        resize +16% +0
-#bind left:${modifierResize}         resize -16% +0
+#bind right:${modifierResize}        resize +10% +0
+#bind left:${modifierResize}         resize -10% +0
 bind right:${modifierResize}        resize +(screenSizeX/${gridX})% +0
 bind left:${modifierResize}         resize -(screenSizeX/${gridX})% +0
 bind up:${modifierResize}           resize +0   -10%
 bind down:${modifierResize}         resize +0   +10%
-#bind right:${modifierResizeReverse} resize -16% +0 bottom-right
-#bind left:${modifierResizeReverse}  resize +16% +0 bottom-righthalf
-bind right:${modifierResizeReverse} resize -(screenSizeX/${gridX})% +0 bottom-right
-bind left:${modifierResizeReverse}  resize +(screenSizeX/${gridX})% +0 bottom-right
+bind right:${modifierResizeReverse} resize -10% +0 bottom-right
+bind left:${modifierResizeReverse}  resize +10% +0 bottom-right
+#bind right:${modifierResizeReverse} resize -(screenSizeX/${gridX})% +0 bottom-right
+#bind left:${modifierResizeReverse}  resize +(screenSizeX/${gridX})% +0 bottom-right
 bind up:${modifierResizeReverse}    resize +0   +10% bottom-right
 bind down:${modifierResizeReverse}  resize +0   -10% bottom-right
-
 
 # Push Bindings
 # -------------
@@ -138,10 +173,10 @@ bind k:${modifierPush}      ${leftThird}
 bind m:${modifierPush}      ${middleThird}
 bind r:${modifierPush}      ${rightHalf}
 #bind e:${modifierPush}     ${rightThird}
-#bind 1:${modifierPush}      ${topLeft}
-#bind 2:${modifierPush}      ${topRight}
-#bind 3:${modifierPush}      ${bottomLeft}
-#bind 4:${modifierPush}      ${bottomRight}
+bind 1:${modifierPush}      ${topLeft}
+bind 2:${modifierPush}      ${topRight}
+bind 3:${modifierPush}      ${bottomLeft}
+bind 4:${modifierPush}      ${bottomRight}
 
 # Nudge Bindings
 # --------------
@@ -152,9 +187,9 @@ bind down:${modifierNudge}  nudge +0   +10%
 
 # Throw Bindings
 # --------------
-#bind 1:ctrl;alt throw 0 resize
-#bind 2:ctrl;alt throw 1 resize
-#bind 3:ctrl;alt throw 2 resize
+#bind 1:${modifierThrow} throw 0 #resize
+#bind 2:${modifierThrow} throw 1 #resize
+#bind 3:${modifierThrow} throw 2 #resize
 
 # Focus Bindings
 # --------------
@@ -180,3 +215,7 @@ bind h:${modifierHint} hint ASDFGHJKLQWERTYUIOPCVBN # use whatever keys you want
 # Grid
 # -----
 bind g:${modifierGrid} grid padding:5 0:${gridX},${gridY} 1:${gridX},${gridY}
+
+# Swith - A Better Application Switcher:
+# -----------------------
+bind tab:cmd switch
