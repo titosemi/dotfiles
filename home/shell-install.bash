@@ -15,7 +15,7 @@ if [[ ! -d "${HOME}/.homesick/repos/homeshick" ]]; then
 fi
 
 # Make symlink of homeshick to ~/bin
-if [[ ! -L "${HOME}/bin/homeshick"]]; then
+if [[ ! -L "${HOME}/bin/homeshick" ]]; then
     ln -s ${HOME}/.homesick/repos/homeshick/bin/homeshick ${HOME}/bin
 fi
 
