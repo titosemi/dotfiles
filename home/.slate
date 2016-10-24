@@ -28,14 +28,14 @@ config windowHintsSpread                true
 config windowHintsSpreadPadding         40
 config windowHintsSpreadSearchWidth     80
 config windowHintsSpreadSearchHeight    80
-config switchIconPadding                5
-config switchBackgroundColor            50;53;58;0.7
-config switchSelectedPadding            5
+#config switchIconPadding                5
+#config switchBackgroundColor            50;53;58;0.7
+#config switchSelectedPadding            5
 #config switchIconSize                  96
-config switchShowTitles                 true
-config switchFontName                   "Inconsolata\ for\ Powerline"  
-config switchFontSize                   14
-config switchRoundedCornerSize          5
+#config switchShowTitles                 true
+#config switchFontName                   "Inconsolata\ for\ Powerline"  
+#config switchFontSize                   14
+#config switchRoundedCornerSize          5
 config undoOps                          move,resize
 
 
@@ -218,4 +218,4 @@ bind g:${modifierGrid} grid padding:5 0:${gridX},${gridY} 1:${gridX},${gridY}
 
 # Swith - A Better Application Switcher:
 # -----------------------
-bind tab:cmd switch
+# bind tab:cmd switch
