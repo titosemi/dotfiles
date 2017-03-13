@@ -5,3 +5,19 @@
 	default = simple
 [branch]
 	autosetupmerge = always
+[diff]
+    tool = kdiff3
+    guitool = kdiff3
+[difftool "kdiff3"]
+    path = /Applications/kdiff3.app/Contents/MacOS/kdiff3
+    trustExitCode = false
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+[filter "lfs"]
+	smudge = git-lfs smudge %f
+	required = true
+	clean = git-lfs clean %f
+[github]
+	user = titosemi

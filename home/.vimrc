@@ -87,16 +87,19 @@ noremap <down> <NOP>
 noremap <left> <NOP>
 noremap <right> <NOP>
 
-" Move around
-" noremap <up> ddkP                               " Move lines up
-" noremap <down> ddp                              " Move lines down
+" Move around (get the codes by typing CTRL + V and CTRL + desired key in insert mode)
+noremap [B ddp                                " Move lines down
+noremap [A ddkP                               " Move lines up
 
 nnoremap <c-j> <c-w><c-j>                       " Move to the split below
 nnoremap <c-k> <c-w><c-k>                       " Move to the split above
 nnoremap <c-l> <c-w><c-l>                       " Move to the split at the right
 nnoremap <c-h> <c-w><c-h>                       " Move to the split at the left
 
-vmap <leader>cp "*y
+" Clipboard
+noremap YY "*y<CR>
+noremap P "*gP<CR>
+noremap XX "*x<CR>
 
 nmap <silent> <leader>ev :e $HOME/.vimrc<cr>    " Edit this file ('e'dit 'v'imrc)
 nmap <silent> <leader>sv :so $HOME/.vimrc<cr>   " Source this file ('s'ource 'v'imrc)
@@ -141,8 +144,8 @@ let g:airline#extensions#tmuxline#enabled = 0 " Let vim-airline manage the color
 
 " Vim Wiki
 let wiki_1 = {}
-let wiki_1.path = '~/Dropbox/Josemi/Documentos/Wiki/'
-let wiki_1.html_path = '~/Dropbox/Josemi/Public/Wiki/'
+let wiki_1.path = '~/Dropbox/Josemi/Documentos/Wikis/Personal'
+let wiki_1.html_path = '~/Dropbox/Josemi/Public/Wikis/Personal'
 let wiki_1.auto_export = 1 " Won't work since at the moment only works for default syntax and not for markdown
 let wiki_1.auto_toc = 1
 let wiki_1.index = 'main'
@@ -150,8 +153,17 @@ let wiki_1.syntax = 'markdown'
 let wiki_1.ext = '.md'
 let wiki_1.nested_syntaxes = {'php': 'php', 'bash': 'sh', 'py': 'python', 'js': 'javascript', 'html': 'html', 'css': 'css'}
 
+let wiki_2 = {}
+let wiki_2.path = '~/Dropbox/Josemi/Documentos/Wikis/Westwing'
+let wiki_2.html_path = '~/Dropbox/Josemi/Public/Wikis/Westwing'
+let wiki_2.auto_export = 1 " Won't work since at the moment only works for default syntax and not for markdown
+let wiki_2.auto_toc = 1
+let wiki_2.index = 'main'
+let wiki_2.syntax = 'markdown'
+let wiki_2.ext = '.md'
+let wiki_2.nested_syntaxes = {'php': 'php', 'bash': 'sh', 'py': 'python', 'js': 'javascript', 'html': 'html', 'css': 'css'}
 
-let g:vimwiki_list = [wiki_1]
+let g:vimwiki_list = [wiki_1, wiki_2]
 
 let g:vimwiki_hl_headers = 1 " Colors for headers
 let g_vimwiki_hl_cb_checked = 1
