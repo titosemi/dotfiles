@@ -48,7 +48,8 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(brew docker git jira jsontools phing osx taskwarrior tig tmux web-search)
 
 # Homeshick integration - It needs to be loaded before ohmyzsh! https://github.com/andsens/homeshick/issues/89
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+export HOMESHICK_DIR="/usr/local/opt/homeshick"
+source "${HOMESHICK_DIR}/homeshick.sh"
 fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 
 # Load Oh My ZSH
