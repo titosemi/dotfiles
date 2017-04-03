@@ -87,6 +87,10 @@ noremap <down> <NOP>
 noremap <left> <NOP>
 noremap <right> <NOP>
 
+" Remap ESC
+inoremap jj <ESC>
+inoremap jk <ESC>
+
 " Move around (get the codes by typing CTRL + V and CTRL + desired key in insert mode)
 noremap [B ddp                                " Move lines down
 noremap [A ddkP                               " Move lines up
@@ -98,7 +102,7 @@ nnoremap <c-h> <c-w><c-h>                       " Move to the split at the left
 
 " Clipboard
 noremap YY "*y<CR>
-noremap P "*gP<CR>
+noremap PP "*gP<CR>
 noremap XX "*x<CR>
 
 nmap <silent> <leader>ev :e $HOME/.vimrc<cr>    " Edit this file ('e'dit 'v'imrc)
