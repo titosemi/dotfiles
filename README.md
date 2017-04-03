@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/titosemi/dotfiles.git && cd dotfiles && ./bootstrap.sh
+git clone https://github.com/titosemi/dotfiles.git && cd dotfiles && ./bootstrap.bash
 ```
 
 ## Updating
@@ -11,7 +11,7 @@ git clone https://github.com/titosemi/dotfiles.git && cd dotfiles && ./bootstrap
 To update just `cd` into your local `dotfiles` repository and then:
 
 ```bash
-./bootstrap.sh
+./bootstrap.bash
 ```
 
 Suggestions/improvements are more than
