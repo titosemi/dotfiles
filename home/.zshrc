@@ -70,7 +70,7 @@ export LC_CTYPE_='en_US.UTF-8'
  if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
  else
-   export EDITOR='mvim'
+   export EDITOR='mvim -f'
  fi
 
 # Use vim as man pager
@@ -94,105 +94,8 @@ test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_in
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+test -f "${HOME}/.aliasrc" &&  source "${HOME}/.aliasrc"
+test -f "${HOME}/.functionrc" &&  source "${HOME}/.functionrc"
 
-alias dotfile-reload="source $HOME/.zshrc"
-alias dotfile-edit="$EDITOR $HOME/.zshrc"
-
-alias prettyjson='python -m json.tool'
-
-alias fix-gpg="killall -9 scdaemon; killall -9 gpg-agent; gpg --card-status"
-alias fix-dns="sudo discoveryutil mdnsactivedirectory yes"
-
-alias rm="rmtrash"
-
-alias cddesk="cd $HOME/Desktop"
-alias cddown="cd $HOME/Downloads"
-alias cddocs="cd $HOME/Documents"
-alias cdwwdocs="cd $HOME/Documents/Westwing"
-alias cdww="cd $HOME/Documents/Westwing"
-alias cdwip="cd $HOME/Development/WIP"
-alias cddev="cd $HOME/Development"
-alias cdtmp="cd $HOME/Desktop/tmp"
-alias cdwwdev="cd $HOME/Development/Westwing"
-alias cddrop="cd $HOME/Dropbox"
-alias cddrive="cd $HOME/Google\ Drive"
-alias cdmovies="cd $HOME/Movies"
-alias cdmusic="cd $HOME/Music"
-
-alias mysql-workbench="open /Applications/MySQLWorkbench.app"
-
-alias wifi-info="/System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -I"
-
-alias sshuttle="sshuttle -D --pidfile /usr/local/var/run/sshuttle.pid -v "
-alias sshuttle-stop='kill $(cat /usr/local/var/run/sshuttle.pid)'
-alias sshuttle-log="sudo tail -f /var/log/system.log | grep --line-buffered sshuttle"
-alias sshuttle-westwing="sshuttle --dns -r ssh.westwing.eu 0/0"
-
-alias dcs="docker-compose $*"
-alias dcl="docker volume rm $(docker volume ls -q -f 'dangling=true') 2>/dev/null; docker rmi $(docker images -f 'dangling=true' -q) 2>/dev/null"
-
-# Docker images
-alias composer="docker run -it --rm -v "$(pwd):/app" composer/composer:1.0.0-beta1 $*"
-alias phpunit="docker run -it --rm -v "$(pwd):/app" phpunit/phpunit $*"
-alias rstudio="docker run -d -v "$(pwd):/home/rstudio" -p 8787:8787 -e USER=rstudio -e PASSWORD=rstudio rocker/rstudio"
-
-# Load Weather
-function weather() {
-    local cache_file='/tmp/weather.txt'
-    local cache=3600
-    local update='false'
-    local modify=''
-    local now=$(date +%s)
-    local diff=''
-
-    if [[ ! -f "${cache_file}" ]]; then
-        update='true'
-    else
-        modify="$(stat -f "%m" "${cache_file}" 2>/dev/null)"
-        diff=$((now-modify))
-        if [[ ${diff} -ge ${cache} ]]; then
-            update='true'
-        fi
-    fi
-
-    if [[ "${update}" == 'true' ]]; then
-        curl http://wttr.in/ > "${cache_file}"
-    fi
-
-   cat "${cache_file}"
-}
-
-function dps()  {
-    docker ps $@ --format "table{{ .Names }}\\t{{ .Status }}\\t{{ .Command }}\\t{{ .Image }}\\t{{ .Ports }}" | sort -k1 | awk '
-      NR % 2 == 0 {
-        printf "\033[0m";
-      }
-      NR % 2 == 1 {
-        printf "\033[1m";
-      }
-      NR == 1 {
-        PORTSPOS = index($0, "PORTS");
-        PORTS = "PORTS";
-        PORTSPADDING = "\n";
-        for(n = 1; n < PORTSPOS; n++)
-          PORTSPADDING = PORTSPADDING " ";
-      }
-      NR > 1 {
-        PORTS = substr($0, PORTSPOS);
-        gsub(/, /, PORTSPADDING, PORTS);
-      }
-      {
-        printf "%s%s\n", substr($0, 0, PORTSPOS - 1), PORTS;
-      }
-      END {
-        printf "\033[0m";
-      }
-    '
-}
-
-function dpsa() { 
-    dps -a $@;
-}
-
-weather
+type weather 1>/dev/null && weather
 

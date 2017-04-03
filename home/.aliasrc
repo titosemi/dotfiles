@@ -1,0 +1,43 @@
+#!/bin/bash
+
+alias dotfile-reload="source $HOME/.zshrc"
+alias dotfile-edit="$EDITOR $HOME/.zshrc"
+
+alias prettyjson='python -m json.tool'
+
+alias fix-gpg="killall -9 scdaemon; killall -9 gpg-agent; gpg --card-status"
+alias fix-dns="sudo discoveryutil mdnsactivedirectory yes"
+
+alias rm="rmtrash"
+
+alias cddesk="cd $HOME/Desktop"
+alias cddown="cd $HOME/Downloads"
+alias cddocs="cd $HOME/Documents"
+alias cdwwdocs="cd $HOME/Documents/Westwing"
+alias cdww="cd $HOME/Documents/Westwing"
+alias cdwip="cd $HOME/Development/WIP"
+alias cddev="cd $HOME/Development"
+alias cdtmp="cd $HOME/Desktop/tmp"
+alias cdwwdev="cd $HOME/Development/Westwing"
+alias cddrop="cd $HOME/Dropbox"
+alias cddrive="cd $HOME/Google\ Drive"
+alias cdmovies="cd $HOME/Movies"
+alias cdmusic="cd $HOME/Music"
+
+alias mysql-workbench="open /Applications/MySQLWorkbench.app"
+
+alias wifi-info="/System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -I"
+
+alias sshuttle="sshuttle -D --pidfile /usr/local/var/run/sshuttle.pid -v "
+alias sshuttle-stop='kill $(cat /usr/local/var/run/sshuttle.pid)'
+alias sshuttle-log="sudo tail -f /var/log/system.log | grep --line-buffered sshuttle"
+alias sshuttle-westwing="sshuttle --dns -r ssh.westwing.eu 0/0"
+
+alias dcs="docker-compose $*"
+alias ddv="docker volume ls -q -f 'dangling=true'"
+alias ddi="docker images -f 'dangling=true' -q"
+
+# Docker images
+alias composer="docker run -it --rm -v "$(pwd):/app" composer/composer:1.0.0-beta1 $*"
+alias phpunit="docker run -it --rm -v "$(pwd):/app" phpunit/phpunit $*"
+alias rstudio="docker run -d -v "$(pwd):/home/rstudio" -p 8787:8787 -e USER=rstudio -e PASSWORD=rstudio rocker/rstudio"
