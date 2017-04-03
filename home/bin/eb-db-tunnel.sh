@@ -7,6 +7,8 @@ CURRENT_BASE_FILE="$(basename ${CURRENT_FILE_FULL} .sh)"
 PARENT_DIR="$(cd "$(dirname "${CURRENT_DIR}")" && pwd)"
 
 VERSION='1.0'
+CHECKSUM='e70e1cec7fd58e035fc9bf6be212e601fc02ab707be685e9586546741c193d38'
+SOURCE_URL='https://raw.githubusercontent.com/titosemi/dotfiles/master/home/bin/eb-db-tunnel.sh'
 
 COMMAND=''
 APP=''
@@ -41,6 +43,7 @@ Usage: ${CURRENT_BASE_FILE} <command> [<application>] [options]
                                     it will only close that application.
                                     Otherwise it will close all ssh tunnels.
         - usage | help          Displays this message
+        - update                Updates the script
 
     options:
         -k | --key              Specifies the key
@@ -77,12 +80,28 @@ message_tunnel_running() {
     echo "There is already an active ssh tunnel for the application: ${APP}."
 }
 
+message_tunnel_error() {
+    echo "The ssh tunnel couldn't be created."
+}
+
 message_eb_folder() {
     echo "The eb shh command wasn't successful. Are you in the right folder?."
 }
 
 message_no_key() {
     echo "No key has been specified."
+}
+
+message_update_error() {
+    echo "The update couldn't be successfully perform." 
+}
+
+message_update_updated() {
+    echo "The update was successfull."
+}
+
+message_update_equal() {
+    echo "The script is already up-to-date."
 }
 
 _call_message() {
@@ -101,11 +120,13 @@ _exit() {
 }
 
 message_and_error() {
+    echo -n "Error: "
     _call_message "$@"   
     _error
 }
 
 message_usage_and_error() {
+    echo -n "Error: "
     _call_message "$@"   
     echo ""
     usage
@@ -149,7 +170,7 @@ validate_command() {
         status|down|up)
             valid=true
             ;;
-        usage|help)
+        update|usage|help)
             valid=true
             ;;
     esac
@@ -229,6 +250,25 @@ command_usage() {
     usage
 }
 
+command_update() {
+    local sum=''
+
+    curl -qsLo "/tmp/${CURRENT_FILE}" "${SOURCE_URL}"
+    
+    if [[ "$?" -ne 0 ]]; then
+        message_and_error "update_error"
+    fi
+
+    sum="$(shasum -a 256 "/tmp/${CURRENT_FILE}" | cut -d " " -f1)"
+
+    if [[ "${CHECKSUM}" != "${sum}" ]] && [[ "$!" -eq 0 ]]; then
+        cp "/tmp/${CURRENT_FILE}" "${CURRENT_FILE_FULL}"
+        message_and_exit "update_updated"
+    else
+        message_and_exit "update_equal"
+    fi
+}
+
 command_status() {
     output="$(ps ax | grep "${FILE_PATTERN}*" | grep -vE "grep|${CURRENT_FILE}" | awk '{print "  [UP] APP: " $10 " PORT: " $15}' | sed -e "s/SendEnv=${SSH_ENV_VAR}//" | cut -d':' -f 1-3)"
 
@@ -243,7 +283,7 @@ command_up() {
     local pid=''
 
     if [[ -S "$(get_sock_path)" && -f "$(get_ip_path)" ]]; then
-        ssh -S "$(get_sock_path)" -O check ec2-user@"$(cat $(get_ip_path))"
+        ssh -S "$(get_sock_path)" -O check ec2-user@"$(cat $(get_ip_path))" 1>/dev/null 2>/dev/null
     
         if [[ $? -eq 0  ]]; then
             message_and_exit "tunnel_running"
@@ -261,12 +301,9 @@ command_up() {
     EC2_IP="$(echo "${EB_VARS}" | grep 'EC2_IP' | sed 's/EC2_IP=//')";
 
     ssh -M -S "$(get_sock_path)" -o "SendEnv=${SSH_ENV_VAR}${APP}" -i "~/.ssh/${KEY}.pem" -f -L ${PORT}:"${RDS_HOSTNAME}":${RDS_PORT} "${EC2_USER}"@"${EC2_IP}" -N 1>/dev/null 2>/dev/null
-    pid=$!
 
     if [[ $? -ne 0 ]]; then
-        echo "Error while creating the tunnel"
-        kill -9 ${pid} 
-        error
+        message_and_error "tunnel_error"
     fi
 
     echo "${EC2_IP}" > "$(get_ip_path)"
