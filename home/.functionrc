@@ -10,8 +10,11 @@ function weather() {
     local now=$(date +%s)
     local diff=''
 
+    # Clean up old files
+    find -L "/tmp" -maxdepth 1 -mmin -$(( ${cache} / 60 )) -type f -name "weather*" -exec rm -f {} \;
+
     if [[ -n "$1" ]]; then
-        location="~$1"
+        location="$1"
         cache_file="/tmp/weather_${location}.txt"
     fi
 
