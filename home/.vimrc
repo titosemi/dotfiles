@@ -27,6 +27,7 @@ Plugin 'kshenoy/vim-signature'
 Plugin 'rodjek/vim-puppet'
 Plugin 'confluencewiki.vim'
 Plugin 'vimwiki/vimwiki'
+Plugin 'mtth/scratch.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -175,3 +176,5 @@ let g:vimwiki_global_ext = 0
 let g:vimwiki_menu = ''
 let g:vimwiki_listsyms = '✗○◐●✓'
 
+" Scratch.vim
+let g:scratch_persistence_file = '~/.scratch.md'
