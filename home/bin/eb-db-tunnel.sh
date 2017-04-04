@@ -7,13 +7,15 @@ CURRENT_BASE_FILE="$(basename ${CURRENT_FILE_FULL} .sh)"
 PARENT_DIR="$(cd "$(dirname "${CURRENT_DIR}")" && pwd)"
 
 VERSION='1.0'
-CHECKSUM='e70e1cec7fd58e035fc9bf6be212e601fc02ab707be685e9586546741c193d38'
+CHECKSUM='29155c74cf76d8e2e027292f2005296d5284187de72be2999ae7e78adac9a7e6'
 SOURCE_URL='https://raw.githubusercontent.com/titosemi/dotfiles/master/home/bin/eb-db-tunnel.sh'
 
 COMMAND=''
 APP=''
 KEY=''
 PORT=3306
+DIR=''
+ALIAS=''
 
 DEBUG=false
 EB_EB_VARS=''
@@ -23,6 +25,7 @@ EC2_USER='ec2-user'
 EC2_IP=
 PID=''
 
+CONFIG_FILE="${HOME}/.config/eb-db-tunnel.conf"
 FILE_PATH="/tmp"
 FILE_PATTERN="eb-db-tunnel-"
 SSH_ENV_VAR='EB_DB_TUNNEL='
@@ -36,20 +39,31 @@ usage() {
     cat << EOF
 Usage: ${CURRENT_BASE_FILE} <command> [<application>] [options]
     command:
-        - status                Shows status of current ssh tunnels
-        - up <application>      Establish a ssh tunnel to the specified application  
+        - status                Shows status of current ssh tunnels.
+        - up <application>      Establish a ssh tunnel to the specified application.
         - down [application]    Closes any existing ssh tunnel.
                                     If an application application is provided,
                                     it will only close that application.
                                     Otherwise it will close all ssh tunnels.
-        - usage | help          Displays this message
-        - update                Updates the script
+        - usage | help          Displays this message.
+        - update                Updates the script.
 
     options:
-        -k | --key              Specifies the key
-        -p | --port             Specifies the local port for the tunnel
-        -d | --debug            Enables debug. Sets mode -x
-        -h | --help             Displays this message
+        -k= | --key=            Specifies the private key. (Don't add the .pem extension)
+                                    The key is expected to be located in ~/.ssh/
+        -p= | --port=           Specifies the local port for the tunnel.
+        -f= | --folder=         Specifies the directory where the elasticbeanstalk configuration resides.
+
+        -a= | --alias=          Specifies an alias from the configuration file.
+                                    It has precedence (overrides) over the -k, -p and -f options
+                                    The configuration file is expected to be located in ~/.config/eb-db-tunnel.conf
+                                    A sample configuration file could looks like:
+                                        sample.app=MySample-EB-APP
+                                        sample.key=MySample-EB-Key
+                                        sample.dir=~/Projects/My-eb-app
+
+        -d | --debug            Enables debug. Sets mode -x.
+        -h | --help             Displays this message.
 
 EOF
 }
@@ -102,6 +116,26 @@ message_update_updated() {
 
 message_update_equal() {
     echo "The script is already up-to-date."
+}
+
+message_bump_bumped() {
+    echo "The checksum was updated. New checksum: $1"
+}
+
+message_bump_equal() {
+    echo "The checksum didn't changed."
+}
+
+message_no_config() {
+    echo "No configuration file was found in: ${CONFIG_FILE}"
+}
+
+message_no_alias() {
+    echo "The alias ${ALIAS} was not found in the configuration file"
+}
+
+message_no_dir() {
+    echo "The directory ${DIR} doesn't exists"
 }
 
 _call_message() {
@@ -170,7 +204,7 @@ validate_command() {
         status|down|up)
             valid=true
             ;;
-        update|usage|help)
+        update|bump|usage|help)
             valid=true
             ;;
     esac
@@ -190,14 +224,22 @@ validate_command_up() {
     if [[ -z "${KEY}" ]]; then
         message_usage_and_error "no_key"
     fi
+}
 
+validate_parameters() {
+    validate_command "${COMMAND}"
+
+    case "${COMMAND}" in
+        up)
+            validate_command_up
+            shift
+            ;;
+    esac
 }
 
 parse_parameters() {
-    
     if [[ $# -ge 1 ]]; then
         COMMAND="$1"
-        validate_command "${COMMAND}"
         shift
     else
         message_usage_and_error "no_command"
@@ -219,6 +261,14 @@ parse_parameters() {
                     PORT="$(echo $1 | sed -e 's/--port=//' -e 's/-p=//')"
                     shift
                     ;;
+                --folder=*|-f=*)
+                    DIR="$(echo $1 | sed -e 's/--folder=//' -e 's/-f=//')"
+                    shift
+                    ;;
+                --alias=*|-a=*)
+                    ALIAS="$(echo $1 | sed -e 's/--alias=//' -e 's/-a=//')"
+                    shift
+                    ;;
                 --help|-h)
                     usage
                     _exit
@@ -233,13 +283,39 @@ parse_parameters() {
             esac
         done
     fi
-    
-    case "${COMMAND}" in
-        up)
-            validate_command_up "$1"
-            shift
-            ;;
-    esac
+}
+
+_set_config_value() {
+    local config="$1"
+    local key="$2"
+    local var="$(echo ${key} | tr '[:lower:]' '[:upper:]')"
+    local value=''
+ 
+    value="$(echo "${config}" | grep ".${key}=" | sed "s/.*.${key}=//")"
+    if [[ -n "${value}" ]]; then
+        printf -v ${var} "${value}"
+    fi
+}
+
+load_config() {
+    local config=''
+    local value=''
+
+    if [[ -n "${ALIAS}" ]]; then
+        if [[ ! -f "${CONFIG_FILE}" ]]; then
+            message_and_error "no_config"
+        fi
+
+        config="$(cat ${CONFIG_FILE} | grep "${ALIAS}.")"
+
+        if [[ -z "${config}" ]]; then
+            message_and_error "no_alias"
+        fi
+
+        _set_config_value "${config}" "app"
+        _set_config_value "${config}" "key"
+        _set_config_value "${config}" "dir"
+    fi
 }
 
 command_help() {
@@ -248,6 +324,21 @@ command_help() {
 
 command_usage() {
     usage
+}
+
+command_bump() {
+    local sum=''
+
+    sum="$(cat "${CURRENT_FILE_FULL}" | grep -vE "CHECKSUM='[[:lower:][:digit:]]{64}'" | shasum -a 256 | cut -d " " -f1)"
+
+    if [[ "${sum}" != "${CHECKSUM}" ]]; then
+        cp "${CURRENT_FILE_FULL}" "/tmp/${CURRENT_FILE}"
+        sed -i -e "s/\(CHECKSUM='\)\([[:lower:][:digit:]]\{64\}\)'/\1${sum}'/" "/tmp/${CURRENT_FILE}"
+        cp "/tmp/${CURRENT_FILE}" "${CURRENT_FILE_FULL}"
+        message_and_exit "bump_bumped" "${sum}"
+    else
+        message_and_exit "bump_equal"
+    fi
 }
 
 command_update() {
@@ -270,12 +361,13 @@ command_update() {
 }
 
 command_status() {
-    output="$(ps ax | grep "${FILE_PATTERN}*" | grep -vE "grep|${CURRENT_FILE}" | awk '{print "  [UP] APP: " $10 " PORT: " $15}' | sed -e "s/SendEnv=${SSH_ENV_VAR}//" | cut -d':' -f 1-3)"
-
+    output="$(ps ax | grep "${SSH_ENV_VAR}*" | grep -vE "grep|${CURRENT_FILE}")"
     if [[ -z "${output}" ]]; then
         message_and_exit "no_tunnel"
     fi
     
+    output="$(echo ${output} | awk '{print "  [UP] APP: " $10 " PORT: " $15}' | sed -e "s/SendEnv=${SSH_ENV_VAR}//" | cut -d':' -f 1-3)"
+
     echo "${output}"
 }
 
@@ -288,6 +380,15 @@ command_up() {
         if [[ $? -eq 0  ]]; then
             message_and_exit "tunnel_running"
         fi
+    fi
+
+    if [[ -n "${DIR}" ]]; then
+        DIR="$(echo ${DIR} | sed "s:~:${HOME}:")"
+        if [[ ! -d "${DIR}" ]]; then
+            message_and_error "no_dir"
+        fi
+
+        cd "${DIR}"
     fi
 
     EB_VARS="$(eb ssh ${APP} --number 1 --command 'echo "EC2_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)" && sudo docker exec  $(sudo docker ps -q) env;' | grep -E "RDS|EC2" | grep -v "INFO")"
@@ -342,6 +443,8 @@ main() {
     header
     parse_parameters "$@"
     debug
+    load_config
+    validate_parameters
     "command_${COMMAND}"
     _exit
 }
