@@ -7,7 +7,7 @@ CURRENT_BASE_FILE="$(basename ${CURRENT_FILE_FULL} .sh)"
 PARENT_DIR="$(cd "$(dirname "${CURRENT_DIR}")" && pwd)"
 
 VERSION='1.0'
-CHECKSUM='f53acf7c862342c806ef4dccf2f45575a3d5bbe761700d20fd237c57522bcbac'
+CHECKSUM='04f0c2e03b28bc60d67fd564543a81566dfa6fd5a4012053a284afa6c566d58b'
 SOURCE_URL='https://raw.githubusercontent.com/titosemi/dotfiles/master/home/bin/eb-db-tunnel.sh'
 
 COMMAND=''
@@ -367,7 +367,7 @@ command_status() {
         message_and_exit "no_tunnel"
     fi
     
-    output="$(echo ${output} | awk '{print "  [UP] APP: " $10 " PORT: " $15}' | sed -e "s/SendEnv=${SSH_ENV_VAR}//" | cut -d':' -f 1-3)"
+    output="$(echo "${output}" | awk '{print "  [UP] APP: " $10 " PORT: " $15}' | sed -e "s/SendEnv=${SSH_ENV_VAR}//" | cut -d':' -f 1-3)"
 
     echo "${output}"
 }
