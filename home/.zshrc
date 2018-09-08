@@ -1,101 +1,48 @@
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# Load the exports.
+file="${HOME}/.exportrc"
+test -e "${file}" && source "${file}" || echo "File not found: ${file} Skipping sourcing."
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
+# Load my functions
+file="${HOME}/.functionrc"
+test -e "${file}" && source "${file}" || echo "File not found: ${file} Skipping sourcing."
 
-# Uncomment the following line to use case-sensitive completion.
-CASE_SENSITIVE="true"
+# Load my aliases
+file="${HOME}/.aliasrc"
+test -e "${file}" && source "${file}" || echo "File not found: ${file} Skipping sourcing."
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+# Add our completions
+file="${HOME}/.zsh/completions"
+test -d "${name}" && fpath=(${name} $fpath) || echo "File not found: ${file} Skipping sourcing."
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(brew docker git jira jsontools phing osx taskwarrior tig tmux web-search)
-
-# Homeshick integration - It needs to be loaded before ohmyzsh! https://github.com/andsens/homeshick/issues/89
-export HOMESHICK_DIR="/usr/local/opt/homeshick"
-source "${HOMESHICK_DIR}/homeshick.sh"
-fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
+# Load Homeshick. 
+# It needs to be loaded before ohmyzsh! https://github.com/andsens/homeshick/issues/89
+file="${HOMESHICK_DIR}/homeshick.sh"
+if test -e "${file}"; then
+    source "${file}";
+    fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
+else
+    echo "File not found: ${file} Skipping sourcing."
+fi
 
 # Load Oh My ZSH
-source "$ZSH/oh-my-zsh.sh"
+file="${HOME}/.oh-my-zsh.rc"
+test -e "${file}" && source "${file}" || echo "File not found: ${file} Skipping sourcing."
 
-# User configuration
-export PATH="$HOME/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
+# iTerm2 Shell integration
+file="${HOME}/.iterm2_shell_integration.zsh"
+test -e "${file}" && source "${file}" || echo "File not found: ${file} Skipping sourcing." 
 
-# OSX
-export PATH="/usr/local/MacGPG2/bin:/opt/X11/bin:/opt/composer/vendor/bin:$PATH"
+# Fzf integration
+file="${HOME}/.fzf.zsh"
+test -e "${file}" && source "${file}" || echo "File not found: ${file} Skipping sourcing."
 
-# Force language environment
-export LANG='en_US.UTF-8'
-export LC_ALL='en_US.UTF-8'
-export LC_CTYPE_='en_US.UTF-8'
+# Change Tmux window's name
+if [[ -n "${TMUX}" ]] || [[ -n "${TMUX_PANE}" ]]; then
+    if [[ "$(tmux display-message -p '#W')" == "reattach-to-user-namespace" ]]; then
+        tmux rename-window $(pwd | rev | cut -d'/' -f1,2 | rev | awk '{print "../" $1}')
+    fi
+fi
 
-# Preferred editor for local and remote sessions
- if [[ -n $SSH_CONNECTION ]]; then
-   export EDITOR='vim'
- else
-   export EDITOR='mvim -f'
- fi
-
-# Use vim as man pager
-export MANPAGER="/bin/sh -c \"col -bx | vim -c 'set ft=man nolist nonumber nomodifiable nomodified' -\""
-
-# SSH Yubikey
-export SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
-
-# Gihub tokens
-# Homebrew
-export HOMEBREW_GITHUB_API_TOKEN='bf2a5e6726602ad38df2db6bffb14d69b8c28603'
-
-# iTerm2 Sheel integration
-test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-test -f "${HOME}/.aliasrc" &&  source "${HOME}/.aliasrc"
-test -f "${HOME}/.functionrc" &&  source "${HOME}/.functionrc"
-
+# Show the weather (function)
 type weather 1>/dev/null && weather
 

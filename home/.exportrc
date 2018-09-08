@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Prepend or append a folder to PATH if it isn't already present and the folder exists
+# By default it will be prepended, unless a second paramenter is passed with a "append" value
+function add_path 
+{
+    local folder="$1"
+    local position="$2"
+
+    if test -d "${folder}" && ! echo "${PATH}" | grep -Eq "(^|:)${folder}($|:)" ; then
+       if [[ "${position}" == "append" ]]; then
+          PATH="${PATH}:${folder}"
+       else
+          PATH="${folder}:${PATH}"
+       fi
+    fi
+}
+
+# Set path for binaries
+add_path "${HOME}/homebrew/bin"     # Homebrew
+add_path "${HOME}/bin"              # User scripts
+
+export PATH="${PATH}"
+
+# Default XDG directory specification
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_CACHE_DIR="${HOME}/.cache"
+
+# XDG User directoties
+# https://wiki.archlinux.org/index.php/XDG_user_directories
+export XDG_DESKTOP_DIR="${HOME}/Desktop"
+export XDG_DOCUMENTS_DIR="${HOME}/Documents"
+export XDG_DOWNLOAD_DIR="${HOME}/Downloads"
+export XDG_MUSIC_DIR="${HOME}/Music"
+export XDG_PICTURES_DIR="${HOME}/Pictures"
+export XDG_PUBLICSHARE_DIR="${HOME}/Public"
+export XDG_TEMPLATES_DIR="${HOME}/Templates"
+export XDG_VIDEOS_DIR="${HOME}/Movies"
+
+# Force language environment
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+export LC_CTYPE_='en_US.UTF-8'
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='vim'
+else
+    export EDITOR='vim'
+fi
+
+# Pager settings. 
+# Use vim as man pager
+export PAGER='vimpager -c "color desert"'
+export VIMPAGER_VIM="${EDITOR}"
+export MANPAGER="/bin/sh -c \"col -bx | ${EDITOR} -c 'set ft=man nolist nonumber nomodifiable nomodified' -\""
+
+# SSH Yubikey
+# eval `ssh-agent -s` && ssh-agent 1> /dev/null
+export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+
+# Homeshick path
+export HOMESHICK_DIR="$(brew --prefix homeshick)"
+
+# FZF
+export FZF_DEFAULT_OPTS='+s -e --cycle --bind=tab:down,btab:up -1 -0'
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
