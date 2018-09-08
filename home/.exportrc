@@ -26,7 +26,7 @@ export PATH="${PATH}"
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html
 export XDG_DATA_HOME="${HOME}/.local/share"
 export XDG_CONFIG_HOME="${HOME}/.config"
-export XDG_CACHE_DIR="${HOME}/.cache"
+export XDG_CACHE_HOME="${HOME}/.cache"
 
 # XDG User directoties
 # https://wiki.archlinux.org/index.php/XDG_user_directories
