@@ -1,11 +1,17 @@
 #!/bin/bash
 
+os="linux"
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    os="osx"
+fi
+
 # Prepend or append a folder to PATH if it isn't already present and the folder exists
-# By default it will be prepended, unless a second paramenter is passed with a "append" value
+# By default it will be prepended, unless a second paramenter is passed with an "append" value
 function add_path 
 {
     local folder="$1"
-    local position="$2"
+    local position="${2-''}"
 
     if test -d "${folder}" && ! echo "${PATH}" | grep -Eq "(^|:)${folder}($|:)" ; then
        if [[ "${position}" == "append" ]]; then
@@ -16,17 +22,30 @@ function add_path
     fi
 }
 
+# Make sure that Tmux doesn't re-order our PATH
+file="/etc/profile"
+if [[ -n "$TMUX" ]] && [[ -f "${file}" ]]; then
+    PATH=""
+    source "${file}"
+    unset file
+fi    
+
 # Set path for binaries
-add_path "${HOME}/homebrew/bin"     # Homebrew
 add_path "${HOME}/bin"              # User scripts
+add_path "${HOME}/.local/bin"       # More user scripts
+add_path "${HOME}/opt"              # Cloned repos
+
+if [[ "${os}" == "osx" ]]; then
+    add_path "/usr/local/bin"           # Homebrew
+fi
 
 export PATH="${PATH}"
 
 # Default XDG directory specification
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-0.6.html
-export XDG_DATA_HOME="${HOME}/.local/share"
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_DATA_HOME="${HOME}/.local/share"
 
 # XDG User directoties
 # https://wiki.archlinux.org/index.php/XDG_user_directories
@@ -37,36 +56,57 @@ export XDG_MUSIC_DIR="${HOME}/Music"
 export XDG_PICTURES_DIR="${HOME}/Pictures"
 export XDG_PUBLICSHARE_DIR="${HOME}/Public"
 export XDG_TEMPLATES_DIR="${HOME}/Templates"
-export XDG_VIDEOS_DIR="${HOME}/Movies"
+export XDG_VIDEOS_DIR="${HOME}/Videos"
+
+if [[ "${os}" == "osx" ]]; then
+    export XDG_VIDEOS_DIR="${HOME}/Movies"
+fi
 
 # Force language environment
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
-export LC_CTYPE_='en_US.UTF-8'
+export LC_CTYPE='en_US.UTF-8'
+
+export VIM_PATH="${HOME}/.config/vim"
+export MYVIMRC="${VIM_PATH}/vimrc"
+export VIMINIT='source ${MYVIMRC}'
 
 # Preferred editor for local and remote sessions
+LOCAL_EDITOR='vim'
+SSH_EDITOR='vim'
+SSH_CONNECTION="${SSH_CONNECTION-''}"
 if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR='vim'
+    export EDITOR="${LOCAL_EDITOR}"
 else
-    export EDITOR='vim'
+    export EDITOR="${SSH_EDITOR}"
 fi
+
+export BROWSER='qutebrowser'
+export VISUAL_BROWSER='qutebrowser'
 
 # Pager settings. 
 # Use vim as man pager
-export PAGER='vimpager -c "color desert"'
-export VIMPAGER_VIM="${EDITOR}"
+export PAGER="vimpager"
 export MANPAGER="/bin/sh -c \"col -bx | ${EDITOR} -c 'set ft=man nolist nonumber nomodifiable nomodified' -\""
+export VIMPAGER_VIM="${EDITOR}"
 
 # SSH Yubikey
 # eval `ssh-agent -s` && ssh-agent 1> /dev/null
-export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+if command -v gpgconf 1>/dev/null; then
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+else
+    export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+fi
 
-# Homeshick path
-export HOMESHICK_DIR="$(brew --prefix homeshick)"
+# Taskwarrior
+export TASKRC="${XDG_CONFIG_HOME}/taskwarrior/taskrc"
 
 # FZF
 export FZF_DEFAULT_OPTS='+s -e --cycle --bind=tab:down,btab:up -1 -0'
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="${HOME}/.oh-my-zsh"
+
+# Diana
+export DIANA_SECRET_TOKEN=$(grep rpc-secret $XDG_CONFIG_HOME/aria2/aria2.conf | cut -d'=' -f 2)
 
