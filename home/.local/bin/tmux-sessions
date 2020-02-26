@@ -1,0 +1,114 @@
+#!/bin/bash
+
+start=1
+
+if [[ "$1" == 'noattach' ]]; then
+    start=0
+fi
+
+TMUX_SESSION1_NAME='JL'
+TMUX_SESSION2_NAME='WW'
+
+IS_ITERM="$(env | grep -E 'ITERM_SESSION_ID|ITERM_PROFILE' | sed 's/ITERM_SESSION_ID=//;s/ITERM_PROFILE=//' | tr "\n" " " | sed 's/ //g')"
+FLAGS=""
+
+if [[ ! -z "${TMUX}" ]] || [[ ! -z "${TMUX_PANE}" ]]; then
+    echo 'You are already attached to a tmux session.'
+    echo 'sessions should be nested with care, unset $TMUX to force'
+    exit 1
+fi
+
+if [[ ! -z "${IS_ITERM}" ]]; then
+    FLAGS="-CC"
+fi
+
+# Ensure Sessions are created and running
+tmux has-session -t "${TMUX_SESSION1_NAME}" 2>/dev/null
+
+if [[ "$?" -ne 0 ]]; then
+    # Create the session and do not attach it to the client
+    tmux new-session -d -s "${TMUX_SESSION1_NAME}"
+
+    # Monitoring #1
+    tmux rename-window -t "${TMUX_SESSION1_NAME}" 'Monitoring #1'
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'gotop' Enter
+
+    # Monitoring #2
+    tmux new-window -t "${TMUX_SESSION1_NAME}" -n 'Monitoring #2'
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'sudo journalctl -f' Enter
+    tmux split-window -v
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'sudo dmesg -w' Enter
+
+    # Sound
+    tmux new-window -t "${TMUX_SESSION1_NAME}" -n 'Sound'
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'alsamixer -V playback' Enter
+    tmux split-window -v
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'alsamixer -c 0 -V playback' Enter
+
+   # Player
+    tmux new-window -t "${TMUX_SESSION1_NAME}" -n 'Player'
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'ncmpcpp' Enter
+
+   # Spotify
+    tmux new-window -t "${TMUX_SESSION1_NAME}" -n 'Spotify'
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'spt' Enter
+
+   # Rtv
+    tmux new-window -t "${TMUX_SESSION1_NAME}" -n 'Rtv'
+    tmux send-keys -t "${TMUX_SESSION1_NAME}" 'rtv' Enter
+
+    # Wiki
+    #tmux new-window -t "${TMUX_SESSION1_NAME}" -n 'Wiki'
+    #tmux send-keys -t "${TMUX_SESSION1_NAME}" 'cd ~/Documents/Wiki; vim -c "Goyo" index.md' Enter
+
+    # Scratch
+    tmux new-window -t "${TMUX_SESSION1_NAME}" -n 'Scratch'
+fi
+
+# Ensure Sessions are created and running
+tmux has-session -t "${TMUX_SESSION2_NAME}" 2>/dev/null
+
+if [[ "$?" -ne 0 ]]; then
+    # Create the session and do not attach it to the client
+    tmux new-session -d -s "${TMUX_SESSION2_NAME}"
+
+    # Taskwarrior
+    tmux rename-window -t "${TMUX_SESSION2_NAME}" 'Tasks'
+    tmux send-keys -t "${TMUX_SESSION2_NAME}" 'clear; task' Enter
+
+   # Wiki
+    tmux new-window -t "${TMUX_SESSION2_NAME}" -n 'Wiki'
+    #tmux send-keys -t "${TMUX_SESSION2_NAME}" 'cd ~/Documents/Work/Wiki; vim -c "VimwikiMakeDiaryNote" -c "Goyo" index Scratch.md' Enter
+    tmux send-keys -t "${TMUX_SESSION2_NAME}" 'joplin' Enter
+    
+    # Weechat
+    tmux new-window -t "${TMUX_SESSION2_NAME}" -n 'Weechat'
+    tmux send-keys -t "${TMUX_SESSION2_NAME}" 'weechat' Enter
+
+
+    # File browser
+    tmux new-window -t "${TMUX_SESSION2_NAME}" -n 'Ranger'
+    tmux send-keys -t "${TMUX_SESSION2_NAME}" 'ranger' Enter
+
+    # OMS
+    #tmux new-window -t "${TMUX_SESSION2_NAME}" -n 'OMS'
+    #tmux send-keys -t "${TMUX_SESSION2_NAME}" 'cd ~/Development/Westwing/oms; clear' Enter 
+    #tmux split-window -v
+    #tmux send-keys -t "${TMUX_SESSION2_NAME}" 'cd ~/Development/Westwing/oms; clear' Enter
+
+    # Scratch
+    tmux new-window -t "${TMUX_SESSION2_NAME}" -n 'Scratch'
+
+    # Back to first one
+    tmux select-window -t 1
+fi
+
+
+# Attach
+COMMAND="tmux ${FLAGS} attach-session -t ${TMUX_SESSION2_NAME}"
+
+if [[ "${start}" -eq 1 ]]; then
+    eval ${COMMAND}
+fi
+
+exit 0
