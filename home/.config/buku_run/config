@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+_rofi () {
+    rofi -dmenu -i -no-levenshtein-sort -width 1000 "$@"
+    #rofi -theme /usr/share/rofi/themes/arthur.rasi -dmenu -i -no-levenshtein-sort -width 1000 "$@"
+}
+
+# display settings
+display_type=1
+max_str_width=80
+
+# keybindings
+switch_view="Alt+Tab"
+new_bookmark="Alt+n"
+actions="Alt+a"
+edit="Alt+e"
+delete="Alt+d"
+
+# colors
+help_color="#2d7ed8"
