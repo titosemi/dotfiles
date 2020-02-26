@@ -46,7 +46,9 @@ DISABLE_AUTO_TITLE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(brew docker git jira jsontools phing osx shrink-path taskwarrior tig tmux web-search)
+# plugins=(docker git jira jsontools phing osx shrink-path taskwarrior tig tmux vi-mode web-search)
+
+plugins=(aws docker jira jsontools kubectl phing shrink-path taskwarrior web-search)
 
 # Load Oh My ZSH
 file="${ZSH}/oh-my-zsh.sh"
