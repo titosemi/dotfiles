@@ -4,32 +4,40 @@ set nocompatible
 
 filetype off        " required by Vundle. We will enable it afterwards
 
+" set rtp+=$HOME/.config/vim/bundle
 " Set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=$HOME/.config/vim/bundle/Vundle.vim
+" call vundle#begin()
 " Alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+call vundle#begin("$HOME/.config/vim/bundle")
 
 " Let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
 " List of plugins/Vundles
-Plugin 'https://github.com/blueshirts/darcula.git'
-Plugin 'mhinz/vim-startify'
-Plugin 'vim-airline/vim-airline'
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'ptzz/lf.vim'
-Plugin 'mattn/webapi-vim'
-Plugin 'mattn/gist-vim'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'kshenoy/vim-signature'
-Plugin 'rodjek/vim-puppet'
-Plugin 'confluencewiki.vim'
+Plugin 'https://github.com/blueshirts/darcula.git'  " My favourite color scheme
+Plugin 'mhinz/vim-startify'                         " Startup screen
+Plugin 'vim-airline/vim-airline'                    " Vim status bar
+Plugin 'edkolev/tmuxline.vim'                       " Tmux status bar
+Plugin 'ptzz/lf.vim'                                " Intregrates lf in vim
+Plugin 'mattn/webapi-vim'                           " Dependency for gists
+Plugin 'mattn/gist-vim'                             " Github gists
+Plugin 'airblade/vim-gitgutter'                     " Show git differences in gutter
+Plugin 'kshenoy/vim-signature'                      " Marks in gutter
+Plugin 'rodjek/vim-puppet'                          " Puppet syntax highlithing
 Plugin 'vimwiki/vimwiki'
 Plugin 'mtth/scratch.vim'
 Plugin 'ZoomWin'
+Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
+Plugin 'junegunn/goyo.vim'
 Plugin 'qpkorr/vim-bufkill'
+Plugin 'tpope/vim-commentary'
+Plugin 'farseer90718/vim-taskwarrior'
+Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'echuraev/translate-shell.vim'
+Plugin 'tbabej/taskwiki'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -42,19 +50,22 @@ function! SourceIfExists(file)
 endfunction
 " }
 
-" Load fzf
-set rtp+=/usr/local/opt/fzf
-
 filetype plugin indent on
 
 syntax on                   " Enable syntax highlighting
 silent! colorscheme darcula " Load colorschema but don't complaint if it doesn't exists
 set guifont=Inconsolata\ for\ Powerline:h15
 set number
-if has("gui_running")
+set relativenumber
+" if has("gui_running")
+    set background=dark
     " Make the background transparent
     highlight Normal guibg=NONE ctermbg=NONE 
-endif
+" endif
+
+" Make backspace behave like in the rest of the applications
+"   https://vi.stackexchange.com/a/2163
+set backspace=indent,eol,start
 
 " Status line
 set showcmd         " Show partial/incomplete commands in the last line of the screen
@@ -88,9 +99,13 @@ set smartcase       " Except when using capital letters
 set hlsearch        " Highlight searches
 
 " Centralise swap and undo files
-set directory=$HOME/.vim/data/swap/
-set undodir=~/.vim/data/undo/
+set directory=$HOME/.cache/vim/swap/
+set undodir=~/.cache/vim/undo/
 set undofile
+
+setlocal spell spelllang=en_us
+set complete+=kspell
+autocmd BufRead,BufNewFile *.md setlocal spell
 
 " Filetype settings
 filetype on
@@ -110,6 +125,11 @@ noremap <down> <NOP>
 noremap <left> <NOP>
 noremap <right> <NOP>
 
+"inoremap <up> <NOP>
+"inoremap <down> <NOP>
+"inoremap <left> <NOP>
+"inoremap <right> <NOP>
+
 " Remap ESC
 inoremap jj <ESC>
 inoremap jk <ESC>
@@ -128,12 +148,16 @@ nnoremap <c-w>M <C-W>\| <C-W>_                  " Maximize the window
 nnoremap <c-w>m <C-W>=                          " Resize window (50%)
 
 " Clipboard
+vmap YY "+y<CR>
+" noremap YY "*y<CR>
 noremap YY "*y<CR>
 noremap PP "*gP<CR>
 noremap XX "*x<CR>
 
 nmap <silent> <leader>ev :e $HOME/.vimrc<cr>    " Edit this file ('e'dit 'v'imrc)
-nmap <silent> <leader>sv :so $HOME/.vimrc<cr>   " Source this file ('s'ource 'v'imrc)
+" nmap <silent> <leader>sv :so $HOME/.vimrc<cr>   " Source this file ('s'ource 'v'imrc)
+nmap <silent> <leader>sv :so $MYVIMRC<cr>   " Source this file ('s'ource 'v'imrc)
+map <leader>f :Lf<CR>.
 
 nnoremap <leader>r :nohl<CR><C-L>               " Map Redraw screen (<leader>r) to also turn off search highlighting
 
@@ -146,6 +170,9 @@ map <silent> <c-n> :NERDTreeToggle<CR>          " Open NERDTree
 " =====================
 " = Plugings Settings =
 " =====================
+" Load fzf
+set rtp+=$HOMEBREW_PREFIX/bin/fzf
+" set rtp+=/usr/local/opt/fzf
 
 " Startify
 let g:startify_bookmarks = [ {'v': '~/.vimrc'} , {'z': '~/.zshrc'} ]
@@ -175,43 +202,46 @@ let g:gitgutter_highlight_lines = 0
 let g:airline#extensions#tmuxline#enabled = 0 " Let vim-airline manage the colors
 
 " Vim Wiki
-let wiki_1 = {}
-let wiki_1.path = '~/Dropbox/Josemi/Documents/Wikis/Personal/'
-let wiki_1.html_path = '~/Dropbox/Josemi/Public/Wikis/Personal/Export/'
-let wiki_1.auto_export = 1 " Won't work since at the moment only works for default syntax and not for markdown
-let wiki_1.auto_toc = 1
-let wiki_1.index = 'index'
-let wiki_1.syntax = 'markdown'
-let wiki_1.ext = '.md'
-let wiki_1.nested_syntaxes = {'php': 'php', 'bash': 'sh', 'py': 'python', 'js': 'javascript', 'html': 'html', 'css': 'css'}
+let wiki_default = {}
+let wiki_default.auto_export = 1 " Won't work since at the moment only works for default syntax and not for markdown
+let wiki_default.auto_toc = 1
+let wiki_default.index = 'index'
+let wiki_default.syntax = 'markdown'
+let wiki_default.ext = '.md'
+let wiki_default.nested_syntaxes = {'php': 'php', 'bash': 'sh', 'py': 'python', 'js': 'javascript', 'html': 'html', 'css': 'css'}
 
-let wiki_2 = {}
-let wiki_2.path = '~/Dropbox/Josemi/Documents/Wikis/Westwing/'
-let wiki_2.html_path = '~/Dropbox/Josemi/Public/Wikis/Westwing/Export/'
-let wiki_2.auto_export = 1 " Won't work since at the moment only works for default syntax and not for markdown
-let wiki_2.auto_toc = 1
-let wiki_2.index = 'index'
-let wiki_2.syntax = 'markdown'
-let wiki_2.ext = '.md'
-let wiki_2.nested_syntaxes = {'php': 'php', 'bash': 'sh', 'py': 'python', 'js': 'javascript', 'html': 'html', 'css': 'css'}
+let personal_wiki = copy(wiki_default)
+let personal_wiki.path = '~/Dropbox/Josemi/Documents/Wikis/Personal/'
+let personal_wiki.html_path = '~/Dropbox/Josemi/Public/Wikis/Personal/Export/'
 
-let g:vimwiki_list = [wiki_1, wiki_2]
+let work_wiki = copy(wiki_default)
+let work_wiki.path = '~/Dropbox/Josemi/Documents/Wikis/Westwing/'
+let work_wiki.html_path = '~/Dropbox/Josemi/Public/Wikis/Westwing/Export/'
+
+let g:vimwiki_list = [work_wiki, personal_wiki]
 
 let g:vimwiki_hl_headers = 1 " Colors for headers
 let g_vimwiki_hl_cb_checked = 1
 let g:vimwiki_global_ext = 0
 let g:vimwiki_menu = ''
 let g:vimwiki_listsyms = '✗○◐●✓'
+let g:vimwiki_folding= 'custom'
 
 " Scratch.vim
 let g:scratch_persistence_file = '~/.scratch.md'
 
 " vimpager
+if exists('g:vimpager')
+"  colorscheme desert
+endif
+
 let g:vimpager = {}
 let g:less     = {}
 
 let g:vimpager.ansiesc = 0
 let g:vimpager.passthrough = 1
+
+
 
 " DbExt
 let g:dbext_default_passwd_use_secret = 1
@@ -223,4 +253,15 @@ let g:dbext_default_variable_remember = 1
 call SourceIfExists("~/.vim/dbextrc")
 
 " Lf
+let g:lf_map_keys = 0
 let g:lf_replace_netrw = 1 
+" let g:lf_command_override = 'lf --cmd "set show_hidden=true"'
+" map <leader>f :Lf<CR>.
+
+" FZF
+map <leader>f :FZF<CR>
+map <leader>b :Buffers<CR>
+
+" Vim Taskwarrior
+let g:task_rc_override = 'rc.defaultwidth=0'
+
