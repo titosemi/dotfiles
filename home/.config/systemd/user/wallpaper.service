@@ -1,0 +1,9 @@
+[Unit]
+Description=Wallpaper
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=/bin/bash %h/.local/bin/wallpaper.sh
+
+[Install]
+WantedBy=default.target
