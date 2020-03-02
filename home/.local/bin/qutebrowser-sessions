@@ -1,0 +1,32 @@
+#!/bin/bash    
+
+# Originally copied from https://raw.githubusercontent.com/noxultranonerit/SimpleScripts/master/webengine_netscape
+
+# for qtwebengine
+# also applicable to chromium(confirmed), and possibly chrome
+# convert the sqlite3 formatted cookies to the netscape format
+
+# eg. $XDG_DATA_HOME/{BROWSER_NAME}/webengine/Cookies $XDG_CONFIG_HOME/chromium/Default/Cookies etc.
+COOKIE_DATABASE="${XDG_DATA_HOME}/qutebrowser/webengine/Cookies"    
+COOKIE_PATH="${XDG_DATA_HOME}/aria2c/Cookies"
+
+# headers and table name could be different when qtwebengine is not in use
+QUERY="SELECT host_key, path, is_secure, expires_utc, name, value FROM cookies;"
+
+# cookie filter, delete this line and accordingly "| grep $GREP" in the sqlite3 command line if you want a full cookie list
+GREP="$1"
+
+if [[ -n "${GREP}" ]]; then
+    GREP=" | grep "${GREP}""
+else
+    GREP=''
+fi
+
+cat <<END
+# Netscape Cookie    
+# Selected sqlite3 cookie file is "${COOKIE_DATABASE}"    
+# Filter "${GREP}"    
+END
+
+sqlite3 -readonly -separator '         ' "${COOKIE_DATABASE}" "${QUERY}" "${GREP}" | awk '{ startondot = $1 ~ /^\./ ? "TRUE" : "FALSE"; issecure = $3 == "0" ? "FALSE":"TRUE"; printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\n",$1,startondot,$2,issecure,$4,$5,$6)}' > "${COOKIE_PATH}"
+
