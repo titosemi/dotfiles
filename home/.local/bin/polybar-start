@@ -1,0 +1,11 @@
+#!/bin/bash
+
+killall -q polybar
+
+polybar main >> /tmp/polybar_main.log 2>&1 &
+
+for monitor in $(polybar -m | grep -v primary | cut -d':' -f1 | sort) 
+do
+    MONITOR="$monitor" polybar external >> "/tmp/polybar_external_${monitor}.log" 2>&1 &
+done
+
