@@ -4,10 +4,12 @@ set nocompatible
 
 filetype off        " required by Vundle. We will enable it afterwards
 
-" set rtp+=$HOME/.config/vim/bundle
 " Set the runtime path to include Vundle and initialize
+" set rtp+=$HOME/.config/vim/bundle
 " set rtp+=~/.vim/bundle/Vundle.vim
-set rtp+=$HOME/.config/vim/bundle/Vundle.vim
+" set rtp+=$HOME/.config/vim/bundle/Vundle.vim
+set rtp+=/usr/share/vim/vimfiles/autoload/vundle.vim
+
 " call vundle#begin()
 " Alternatively, pass a path where Vundle should install plugins
 call vundle#begin("$HOME/.config/vim/bundle")
@@ -17,6 +19,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " List of plugins/Vundles
 Plugin 'https://github.com/blueshirts/darcula.git'  " My favourite color scheme
+ Plugin 'hzchirs/vim-material'                       " My favourite color scheme
 Plugin 'mhinz/vim-startify'                         " Startup screen
 Plugin 'vim-airline/vim-airline'                    " Vim status bar
 Plugin 'edkolev/tmuxline.vim'                       " Tmux status bar
@@ -53,10 +56,13 @@ endfunction
 filetype plugin indent on
 
 syntax on                   " Enable syntax highlighting
-silent! colorscheme darcula " Load colorschema but don't complaint if it doesn't exists
 set guifont=Inconsolata\ for\ Powerline:h15
 set number
 set relativenumber
+
+" let g:material_style='palenight' " palenight/oceanic variants
+silent! colorscheme vim-material " Load colorschema but don't complaint if it doesn't exists
+
 " if has("gui_running")
     set background=dark
     " Make the background transparent
