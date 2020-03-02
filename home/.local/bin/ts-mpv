@@ -1,0 +1,33 @@
+#!/bin/bash
+
+source $HOME/.exportrc
+
+url="$1"
+if [[ -z "$url" ]]; then
+    echo "No URL provided"
+    exit 1
+fi
+
+folder="$XDG_VIDEOS_DIR/qutebrowser"
+if [[ ! -d "$folder" ]]; then
+    mkdir "$folder"
+fi
+
+socket_mpv="$HOME/.cache/ts-mpv"
+export TS_SOCKET="$socket_mpv" 
+
+output="$(youtube-dl --get-filename -o "%(title)s.%(ext)s" "$url")"
+title="$(echo $output | rev | cut -d'.' -f2- | rev)"
+output="$(echo $output | sed 's/ /_/g')"
+filename="$folder/$output"
+
+flag=''
+if [[ ! -f "$filename" ]]; then
+    notify-send "Qutebrowser" "Downloading video, playing will start soon\n$title"
+    tsp -L "Download: $title" youtube-dl --mark-watched -f best --external-downloader aria2c -o "$filename" "$url"
+    flag='-d'
+fi
+
+#tsp -L "Notifying" -d notify-send "Qutebrowser" "Playing video:\n$title"
+tsp -L "Playing: $title" $flag mpv --x11-name="MpvQute" --force-window=immediate --no-terminal --keepaspect --geometry=100%:96% --autofit=400 --no-border "$filename"
+
