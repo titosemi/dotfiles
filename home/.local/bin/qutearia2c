@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source $HOME/.exportrc
+
+url="$1"
+if [[ -z "$url" ]]; then
+    echo "No URL provided"
+    exit 1
+fi
+
+title="Qutebrowser"
+
+notify-send "$title" "Downloading with aria2c: $url"
+
+/usr/bin/diana add "$url"
+
+exit $?
+
