@@ -7,12 +7,12 @@ filetype off        " required by Vundle. We will enable it afterwards
 " Set the runtime path to include Vundle and initialize
 " set rtp+=$HOME/.config/vim/bundle
 " set rtp+=~/.vim/bundle/Vundle.vim
- set rtp+=$HOME/.config/vim/bundle/Vundle.vim
+set rtp+=$HOME/.homesick/repos/Vundle.vim
 set rtp+=/usr/share/vim/vimfiles/autoload/vundle.vim
 
 " call vundle#begin()
 " Alternatively, pass a path where Vundle should install plugins
-call vundle#begin("$HOME/.config/vim/bundle")
+call vundle#begin("$HOME/.local/share/vim/bundle")
 
 " Let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
