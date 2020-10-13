@@ -2,7 +2,7 @@
     name = Josemi Liébana
     email = josemi.liebana@gmail.com
     signingKey = C9F7F0CFDA0C56B43E1CD346DAB084CC82AD49FA
-[includeIf "gitdir:~/Development/Westwing"]
+[includeIf "gitdir:~/Development/Westwing/"]
     path = ~/Development/Westwing/.gitconfig
 [push]
     default = simple

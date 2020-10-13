@@ -7,7 +7,7 @@ filetype off        " required by Vundle. We will enable it afterwards
 " Set the runtime path to include Vundle and initialize
 " set rtp+=$HOME/.config/vim/bundle
 " set rtp+=~/.vim/bundle/Vundle.vim
-" set rtp+=$HOME/.config/vim/bundle/Vundle.vim
+ set rtp+=$HOME/.config/vim/bundle/Vundle.vim
 set rtp+=/usr/share/vim/vimfiles/autoload/vundle.vim
 
 " call vundle#begin()

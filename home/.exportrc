@@ -104,6 +104,9 @@ fi
 # Taskwarrior
 export TASKRC="${XDG_CONFIG_HOME}/taskwarrior/taskrc"
 
+# Timewarrior
+export TIMEWARRIORDB="${XDG_CONFIG_HOME}/timewarrior/timewarrior.cfg"
+
 # FZF
 export FZF_DEFAULT_OPTS='+s -e --cycle --bind=tab:down,btab:up -1 -0'
 
