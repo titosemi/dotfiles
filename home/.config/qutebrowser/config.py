@@ -49,10 +49,10 @@ def get_translate_url(to, source='auto'):
 #c.content.user_stylesheets = 'solarized-dark-all-sites.css'
 
 c.tabs.title.format = '{audio}{private}{index}: {current_title}'
-c.tabs.title.format_pinned = 'P - {audio}{private}{index}: {current_title}'
+# c.tabs.title.format_pinned = 'P - {audio}{private}{index}: {current_title}'
 c.window.title_format = '{audio}{private} {perc} {title_sep} {current_url}'
 
-c.fonts.monospace = font_name + ', "xos4 Terminus", Terminus, Monospace, "DejaVu Sans Mono", Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace, Fixed, Consolas, Terminal'
+# c.fonts.monospace = font_name + ', "xos4 Terminus", Terminus, Monospace, "DejaVu Sans Mono", Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace, Fixed, Consolas, Terminal'
 c.fonts.completion.entry = font
 c.fonts.debug_console = font
 c.fonts.downloads = font
@@ -61,10 +61,10 @@ c.fonts.keyhint = font
 c.fonts.messages.error = font 
 c.fonts.messages.info = font
 c.fonts.messages.warning = font
-c.fonts.monospace = font_name
+c.fonts.default_family = font_name
 c.fonts.prompts = font
 c.fonts.statusbar = font
-c.fonts.tabs = 'bold ' + font
+# c.fonts.tabs = 'bold ' + font
 
 c.url.default_page = google
 c.url.searchengines = {
@@ -121,7 +121,10 @@ config.bind('K', 'tab-next')
 config.bind('t', 'open -t')
 
 # Darkmode
-c.qt.args = ['blink-settings=darkMode=4']
+c.colors.webpage.darkmode.enabled = True
+c.colors.webpage.prefers_color_scheme_dark = True
+
+# c.qt.args = ['blink-settings=darkMode=4']
 config.bind(',n', 'config-cycle content.user_stylesheets ' + conf + '/darculized-all-sites.css "" ;; reload')
 
 # Open Videos with Mpv
