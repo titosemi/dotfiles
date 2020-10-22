@@ -18,29 +18,31 @@ call vundle#begin("$HOME/.local/share/vim/bundle")
 Plugin 'VundleVim/Vundle.vim'
 
 " List of plugins/Vundles
-Plugin 'https://github.com/blueshirts/darcula.git'  " My favourite color scheme
- Plugin 'hzchirs/vim-material'                       " My favourite color scheme
+Plugin 'https://github.com/blueshirts/darcula.git'  " One of my favourites color scheme
+Plugin 'hzchirs/vim-material'                       " One of my favourites color scheme
 Plugin 'mhinz/vim-startify'                         " Startup screen
 Plugin 'vim-airline/vim-airline'                    " Vim status bar
 Plugin 'edkolev/tmuxline.vim'                       " Tmux status bar
-Plugin 'ptzz/lf.vim'                                " Intregrates lf in vim
-Plugin 'mattn/webapi-vim'                           " Dependency for gists
+Plugin 'ptzz/lf.vim'                                " Integrates lf in vim
+" Plugin 'junegunn/fzf'                               " Integrates fzf in vim
+Plugin 'junegunn/fzf.vim'                           " Integrates fzf in vim
+Plugin 'mattn/webapi-vim'                           " Dependency plugin for gists
 Plugin 'mattn/gist-vim'                             " Github gists
 Plugin 'airblade/vim-gitgutter'                     " Show git differences in gutter
-Plugin 'kshenoy/vim-signature'                      " Marks in gutter
-Plugin 'rodjek/vim-puppet'                          " Puppet syntax highlithing
-Plugin 'vimwiki/vimwiki'
-Plugin 'mtth/scratch.vim'
-Plugin 'ZoomWin'
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
-Plugin 'junegunn/goyo.vim'
-Plugin 'qpkorr/vim-bufkill'
-Plugin 'tpope/vim-commentary'
-Plugin 'farseer90718/vim-taskwarrior'
-Plugin 'nelstrom/vim-markdown-folding'
-Plugin 'echuraev/translate-shell.vim'
-Plugin 'tbabej/taskwiki'
+Plugin 'kshenoy/vim-signature'                      " Show Marks in gutter
+Plugin 'ZoomWin'                                    " Maximize/Restore Window
+Plugin 'qpkorr/vim-bufkill'                         " Close all buffers except the active one
+Plugin 'tpope/vim-commentary'                       " Collapse/Expand comments
+Plugin 'mtth/scratch.vim'                           " Show/Hide Scratch files for quickly writting ideas/notes
+Plugin 'vimwiki/vimwiki'                            " Wiki
+Plugin 'junegunn/goyo.vim'                          " Distraction free writting plugin
+Plugin 'farseer90718/vim-taskwarrior'               " Vim interface for taskwarrior
+"Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'godlygeek/tabular'                          " Dependency plugin for vim-markdown
+Plugin 'plasticboy/vim-markdown'                    " Markdown goodies (folding, styles - concealing etc)
+Plugin 'echuraev/translate-shell.vim'               " Translate without leaving Vim
+Plugin 'tbabej/taskwiki'                            " Interact with Taskwarrior from Vimwiki
+Plugin 'mattn/calendar-vim'                         " Add a calendar to Vim (Optionally used by taskwiki)
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -108,6 +110,31 @@ set hlsearch        " Highlight searches
 set directory=$HOME/.cache/vim/swap/
 set undodir=~/.cache/vim/undo/
 set undofile
+set viewdir=$HOME/.cache/vim/view/
+
+" Enable mouse - I know, but it is useful for long reads while snacking :)
+set mouse=a
+
+" Jump to last position when opening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+endif
+
+" Auto enable Goyo for Markdown and Vimwiki files
+augroup wants_goyo
+    autocmd!
+    autocmd Filetype,BufEnter markdown,mkd,vimwiki call s:auto_goyo()
+augroup END
+
+function! s:auto_goyo()
+    if exists('#goyo')
+      let bufnr = bufnr('%')
+      Goyo!
+      execute 'b '.bufnr
+    else
+      Goyo 80
+  endif
+endfunction
 
 setlocal spell spelllang=en_us
 set complete+=kspell
@@ -150,8 +177,8 @@ nnoremap <c-k> <c-w><c-k>                       " Move to the split above
 nnoremap <c-l> <c-w><c-l>                       " Move to the split at the right
 nnoremap <c-h> <c-w><c-h>                       " Move to the split at the left
 
-nnoremap <c-w>M <C-W>\| <C-W>_                  " Maximize the window
-nnoremap <c-w>m <C-W>=                          " Resize window (50%)
+" nnoremap <c-w>M <C-W>\| <C-W>_                  " Maximize the window
+" nnoremap <c-w>m <C-W>=                          " Resize window (50%)
 
 " Clipboard
 vmap YY "+y<CR>
@@ -163,12 +190,16 @@ noremap XX "*x<CR>
 nmap <silent> <leader>ev :e $HOME/.vimrc<cr>    " Edit this file ('e'dit 'v'imrc)
 " nmap <silent> <leader>sv :so $HOME/.vimrc<cr>   " Source this file ('s'ource 'v'imrc)
 nmap <silent> <leader>sv :so $MYVIMRC<cr>   " Source this file ('s'ource 'v'imrc)
-map <leader>f :Lf<CR>.
+
+nnoremap <leader>q :b # <bar> :bd! # <CR>       " Close buffer without closing Goyo
 
 nnoremap <leader>r :nohl<CR><C-L>               " Map Redraw screen (<leader>r) to also turn off search highlighting
 
 noremap <Leader>W :w !sudo tee % > /dev/null    " Save as sudo
 
+" map <leader>f :Lf<CR>.
+map <leader>f :FZF<CR>
+map <leader>b :Buffers<CR>
 map <silent> <c-s> :Startify<CR>                " Open Startify
 map <silent> <c-n> :NERDTreeToggle<CR>          " Open NERDTree
 
@@ -217,12 +248,12 @@ let wiki_default.ext = '.md'
 let wiki_default.nested_syntaxes = {'php': 'php', 'bash': 'sh', 'py': 'python', 'js': 'javascript', 'html': 'html', 'css': 'css'}
 
 let personal_wiki = copy(wiki_default)
-let personal_wiki.path = '~/Dropbox/Josemi/Documents/Wikis/Personal/'
-let personal_wiki.html_path = '~/Dropbox/Josemi/Public/Wikis/Personal/Export/'
+let personal_wiki.path = '~/Dropbox/Documents/Wikis/Personal/'
+let personal_wiki.html_path = '~/Dropbox/Documents/Public/Wikis/Personal/Export/'
 
 let work_wiki = copy(wiki_default)
-let work_wiki.path = '~/Dropbox/Josemi/Documents/Wikis/Westwing/'
-let work_wiki.html_path = '~/Dropbox/Josemi/Public/Wikis/Westwing/Export/'
+let work_wiki.path = '~/Dropbox/Documents/Wikis/Westwing/'
+let work_wiki.html_path = '~/Dropbox/Documents/Public/Wikis/Westwing/Export/'
 
 let g:vimwiki_list = [work_wiki, personal_wiki]
 
@@ -247,8 +278,6 @@ let g:less     = {}
 let g:vimpager.ansiesc = 0
 let g:vimpager.passthrough = 1
 
-
-
 " DbExt
 let g:dbext_default_passwd_use_secret = 1
 let g:dbext_default_prompt_for_variables = 0
@@ -265,9 +294,11 @@ let g:lf_replace_netrw = 1
 " map <leader>f :Lf<CR>.
 
 " FZF
-map <leader>f :FZF<CR>
-map <leader>b :Buffers<CR>
 
 " Vim Taskwarrior
 let g:task_rc_override = 'rc.defaultwidth=0'
 
+" Taskwiki
+let g:taskwiki_taskrc_location = '~/.config/taskwarrior/taskrc'
+let g:taskwiki_data_location = '~/.local/share/taskwarrior'
+let g:taskwiki_source_tw_colors = 'yes'
