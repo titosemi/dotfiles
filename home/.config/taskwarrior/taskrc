@@ -1,0 +1,107 @@
+# [Created by task 2.5.1 9/21/2020 14:04:35]
+# Taskwarrior program configuration file.
+# For more documentation, see http://taskwarrior.org or try 'man task', 'man task-color',
+# 'man task-sync' or 'man taskrc'
+
+# Here is an example of entries that use the default, override and blank values
+#   variable=foo   -- By specifying a value, this overrides the default
+#   variable=      -- By specifying no value, this means no default
+#   #variable=foo  -- By commenting out the line, or deleting it, this uses the default
+
+# Use the command 'task show' to see all defaults and overrides
+
+data.location               = ~/.local/share/taskwarrior
+weekstart                   = monday
+search.case.sensitive       = no
+active.indicator            = ->
+
+# Aliases
+alias.burndown              = burndown.daily
+
+# Contexts
+context.personal            = project:personal
+context.home                = project:home
+context.work                = project:ww
+
+# Custom Reports
+
+## Report: Weekly planning
+report.week.columns         = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.week.description     = Custom report: Due end of the week
+report.week.filter          = status:pending and limit:page due.before:eow+3
+report.week.labels          = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.week.sort            = urgency-
+
+## Report: Follow up topics
+report.follow.columns       = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.follow.description   = Custom report: Diverses things to follow up
+report.follow.filter        = status:pending limit:page project.has:follow
+report.follow.labels        = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.follow.sort          = urgency-
+
+## Report: Jour Fixes
+report.jf.columns           = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.jf.description       = Custom report: My Jour Fixes and their notes
+report.jf.filter            = status:pending limit:page project.has:jf
+report.jf.labels            = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.jf.sort              = urgency-
+
+## Report: Meetings
+report.meeting.columns      = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.meeting.description  = Custom report: Recurring meetings and my notes
+report.meeting.filter       = status:pending limit:page project.has:meeting
+report.meeting.labels       = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.meeting.sort         = urgency-
+
+## Report: Notes
+report.note.columns         = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.note.description     = Custom report: Random notes
+report.note.filter          = status:pending limit:page project.has:note
+report.note.labels          = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.note.sort            = urgency-
+
+## Report: (O3) One on Ones
+report.o3.columns           = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.o3.description       = Custom report: My 1:1s and their notes
+report.o3.filter            = status:pending limit:page project.has:o3
+report.o3.labels            = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.o3.sort              = urgency-
+
+# Report: Projects
+report.p.columns            = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.p.description        = Custom report: Project checking and their notes
+report.p.filter             = status:pending limit:page project ~ "project"
+report.p.labels             = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.p.sort               = urgency-
+
+# Report: Tasks
+report.t.columns            = id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.t.description        = Custom report: Task list
+report.t.filter             = status:pending limit:page project.has:task
+report.t.labels             = ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.t.sort               = urgency-
+
+# Sync
+#taskd.certificate=
+#taskd.key=
+#taskd.ca=
+#taskd.server=taskwarrior.inthe.am:53589
+#taskd.credentials=
+#taskd.trust=
+
+# Color theme (uncomment one to use)
+#include /usr/share/doc/task/rc/light-16.theme
+#include /usr/share/doc/task/rc/light-256.theme
+#include /usr/share/doc/task/rc/dark-16.theme
+#include /usr/share/doc/task/rc/dark-256.theme
+#include /usr/share/doc/task/rc/dark-red-256.theme
+#include /usr/share/doc/task/rc/dark-green-256.theme
+#include /usr/share/doc/task/rc/dark-blue-256.theme
+#include /usr/share/doc/task/rc/dark-violets-256.theme
+#include /usr/share/doc/task/rc/dark-yellow-green.theme
+#include /usr/share/doc/task/rc/dark-gray-256.theme
+#include /usr/share/doc/task/rc/dark-gray-blue-256.theme
+#include /usr/share/doc/task/rc/solarized-dark-256.theme
+#include /usr/share/doc/task/rc/solarized-light-256.theme
+#include /usr/share/doc/task/rc/no-color.theme
+
