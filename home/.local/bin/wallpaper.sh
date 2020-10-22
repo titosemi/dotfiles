@@ -83,7 +83,7 @@ function loop()
         local background="$(get_background)"
         set_background "${background}"
         
-        change_theme "${background}"
+        #change_theme "${background}"
         log "Finished"
         sleep 5m
     done
