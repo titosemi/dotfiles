@@ -7,7 +7,5 @@
 
 PS1='[\u@\h \W]\$ '
 
-if [[ -f /usr/share/bash-completion/bash_completion ]]; then
-    source /usr/share/bash-completion/bash_completion
-fi
+_source_file "/usr/share/bash-completion/bash_completion"
 

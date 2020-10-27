@@ -49,8 +49,8 @@ alias ddi="docker images -f 'dangling=true' -q"
 alias drun="docker run -it --rm $*"
 
 if [[ "${OSTYPE}" == "linux-gnu" ]]; then
-    _source_file "~/.config/shell/aliases/linux"
+    _source_file "${XDG_CONFIG_HOME}/shell/alias/linux"
 elif [[ "${OSTYPE}" == "darwin" ]]; then
-    _source_file "~/.config/shell/aliases/darwin"
+    _source_file "${XDG_CONFIG_HOME}/shell/alias/darwin"
 fi
 
