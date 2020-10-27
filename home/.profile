@@ -31,7 +31,7 @@ _source_file "${shell_config_path}/functionrc"
 _source_file "${shell_config_path}/aliasrc"
 
 # Load Homeshick
-_source_file "${HOMESHICK_DIR}/.homeshick.sh"
+_source_file "${HOMESHICK_DIR}/homeshick.sh"
 
 shell="$(echo $0)"
 case "${shell}" in
