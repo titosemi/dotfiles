@@ -1,0 +1,3 @@
+#!/bin/bash
+
+alias fix-gpg="killall -9 scdaemon; killall -9 gpg-agent; gpg --card-status"

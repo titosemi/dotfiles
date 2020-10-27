@@ -1,0 +1,5 @@
+#!/bin/bash
+
+alias copy='xclip -sel clip'
+alias open='xdg-open'
+alias usystemctl='systemctl --user'

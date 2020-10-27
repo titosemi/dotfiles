@@ -1,20 +1,29 @@
 #!/bin/bash
 
-alias ll="ls -lahtr"
+# Main aliases
+alias ls='ls --color=auto'
+alias ll='ls -lahtr'
+alias mv='mv -iv'
+alias cp='cp -riv'
+alias mkdir='mkdir -vp'
+alias rm='rmtrash -vI'
+alias ..='cd ..'
+alias ...='cd ../../'
+alias cd..='cd ..'
+alias :q=' exit'
+alias :Q=' exit'
+alias :x=' exit'
 alias less="${PAGER}"
 alias mless="${MANPAGER}"
-alias copy="xclip -sel clip"
-alias open="xdg-open"
-alias usystemctl="systemctl --user"
-alias rm="rmtrash"
+alias grep='grep --color=auto'
+alias prettyjson='python -m json.tool'
 
+# @TODO make it work for bash and zsh
 alias dotfiles-reload="source ${HOME}/.zshrc"
 alias dotfiles-edit="${EDITOR} ${HOME}/.zshrc"
 
-alias prettyjson='python -m json.tool'
-
-alias fix-gpg="killall -9 scdaemon; killall -9 gpg-agent; gpg --card-status"
-
+# Bookmarks
+# @TODO Find alternative for bookmarks
 alias cddesk="cd ${HOME}/Desktop"
 alias cddown="cd ${HOME}/Downloads"
 alias cddocs="cd ${HOME}/Documents"
@@ -26,15 +35,22 @@ alias cdmusic="cd ${HOME}/Music"
 alias cdwwdocs="cd ${HOME}/Documents/Westwing"
 alias cdwwdev="cd ${HOME}/Development/Westwing"
 
-alias mycli="mycli --myclirc=~/.config/mycli/myclirc"
 
+# Sshuttle
 alias sshuttle="sshuttle -D --pidfile /var/run/sshuttle.pid -v "
 alias sshuttle-stop='kill $(cat /var/run/sshuttle.pid)'
 alias sshuttle-log="sudo tail -f /var/log/system.log | grep --line-buffered sshuttle"
 alias sshuttle-westwing="sshuttle --dns -r ssh.westwing.eu 0/0"
 
+# Docker
 alias dcs="docker-compose $*"
 alias ddv="docker volume ls -q -f 'dangling=true'"
 alias ddi="docker images -f 'dangling=true' -q"
 alias drun="docker run -it --rm $*"
+
+if [[ "${OSTYPE}" == "linux-gnu" ]]; then
+    _source_file "~/.config/shell/aliases/linux"
+elif [[ "${OSTYPE}" == "darwin" ]]; then
+    _source_file "~/.config/shell/aliases/darwin"
+fi
 
